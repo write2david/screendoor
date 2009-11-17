@@ -1,5 +1,5 @@
 #!/bin/bash
-# porch.sh
+#  From http://www.mail-archive.com/screen-users@gnu.org/msg02683.html
 
 #####
 __c=""
