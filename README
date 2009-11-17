@@ -1,11 +1,25 @@
-Screendoor
+SCREENDOOR
 
 Available at:  http://github.com/write2david/screendoor
 
 
+
+USE
+Begin using screendoor.sh by adding a line like this to the end of a file like .bash_login and .bashrc
+
+. [path to screendoor]/screendoor.sh
+
+
+
+EXAMPLE
+. ~/screendoor.sh
+
+
+
+
+TIPS
+
 May be good to put something like this in your .screenrc
-
-
 
 defscrollback 10000
 # Window tabs, second to last line
