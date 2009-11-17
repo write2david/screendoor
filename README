@@ -1,6 +1,25 @@
 SCREENDOOR
 
-Available at:  http://github.com/write2david/screendoor
+http://tech.thedesignhut.net/gnu-screen
+
+Available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
+
+
+Git: http://github.com/write2david/screendoor
+
+
+
+
+INTRODUCTION 
+
+It is so nice to be able to login directly at my computer, or SSH, or open an xterm, etc and always be placed inside a pre-existing screen session, able to access all my other screen windows.
+
+My code is not formatted the best.   I have a fair amount of comments along the way in each file, detailing the screen-related issues for dealing with logins that happen in situations like SCP and x-ming, and if x-windows is running from within screen and then you open a xterm w/in that, etc.
+
+Took me lots of trial and error, am open to any input for improving those files.   They do work great currently.
+
+The main screen session is "Cornerstone" (with one blank, non-writable window, has a message giving its purpose, and is held open with a long "sleep" command) and windows are titled by date & time.   In case two logins happen during the same minute or second, milliseconds is also used in the window name,  in order to make sure each window name is unique.
+
 
 
 
@@ -9,9 +28,7 @@ Begin using screendoor.sh by adding a line like this to the end of a file like .
 
 . [path to screendoor]/screendoor.sh
 
-
-
-EXAMPLE
+For example:
 . ~/screendoor.sh
 
 
