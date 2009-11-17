@@ -4,7 +4,7 @@
 #
 # Start screen
 #
-# This line comes from .bashrc, probably not needed here, but just in case:
+# Test for interactive shell, exit if not interactive:
          if [[ $- != *i* ]] ; then
          # Shell is non-interactive.  Be done now!
          exit
@@ -16,14 +16,14 @@ case ${TERM} in
 	exit     ;;
 	esac
 #
-# We want to start screen on all bash prompts, not just all logins.
+# We want to start screen on all shell prompts, not just all logins.
 # This way we can connect to even xterm tabs in XFCE.
-# But if we start screen on all bash prompts, then we'll run into this problem:
-#     ...when screen starts, it auto-starts a bash prompt (of course) and so
-#     this bash prompt will then auto-start screen according to this script.
-# So, we want to prevent screen from starting if the bash prompt
+# But if we start screen on all  prompts, then we'll run into this problem:
+#     ...when screen starts, it auto-starts a prompt (of course) and so
+#     this prompt will then auto-start screen according to this script.
+# So, we want to prevent screen from starting if the prompt
 #       was itself started by screen.
-# And then, after screen is closed, there's auto-logout from the bash prompt,
+# And then, after screen is closed, there's auto-logout from the prompt,
 #       so that you don't have to type "exit" again.
 # 
 # This next line finds out if the command (-o command) that initiated
@@ -64,7 +64,7 @@ then
 	echo ""
 	echo "Your current mail..."
 	mail -H
-	#echo "Message from .bash_login: You are w/in GNU Screen.   (Shift-PgUp for SSH errors)"
+	#echo "Message from screendoor.sh: You are w/in GNU Screen.   (Shift-PgUp for SSH errors)"
 	# See note below, which mentions these lines.
 	export DISPLAY=`cat ~/screen.xDISPLAY.txt`
 	#echo "      (Your x-windows \$DISPLAY now is...  $DISPLAY)"
@@ -82,7 +82,7 @@ else
 screen -wipe > /dev/null 
 #
 #
-echo "Starting GNU Screen from .bash_login..."
+echo "Starting GNU Screen from screendoor.sh..."
 #
 # start main session if not already:
 #
@@ -101,12 +101,12 @@ echo "Starting GNU Screen from .bash_login..."
 #
 #
 #
-# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having the $DISPLAY property set (it's in the initial bash shell, but when that bash shell connects to a new screen window, the bash shell in that new screen window doesn't have the $DISPLAY variable set).  So, while we are still in the initial bash shell, we will write the $DISPLAY variable to a file, and then read it from within the new window's bash shell.
+# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having the $DISPLAY property set (it's in the initial bash shell, but when that bash shell connects to a new screen window, the  shell in that new screen window doesn't have the $DISPLAY variable set).  So, while we are still in the initial  shell, we will write the $DISPLAY variable to a file, and then read it from within the new window's shell.
 # Note that the reason this exists is that $DISPLAY is automatically set when you login over SSH with X-forwarding enabled.
 echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 #
 #
-# Use "-n" on the "echo" because you will be reading this file later in the commadn to name a screen window, and you don't want to try to name a window based on two lines instead of one.
+# Use "-n" on the "echo" because you will be reading this file later in the command to name a screen window, and you don't want to try to name a window based on two lines instead of one.
 #
 # ADDING IN SLEEP COMMANDS TO GIVE SCREEN A CHANCE TO CATCH UP WITHOUT FREEZING
 echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && sleep 0.2 && screen -S main -X prev && sleep 0.2 && screen -S main -x -p "`cat ~/screen.uniqueID.txt`" && clear && exit
