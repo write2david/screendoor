@@ -1,0 +1,11 @@
+
+
+
+
+May be good to put something like this in .screenrc
+
+
+defscrollback 10000
+# Window tabs, second to last line
+# caption always "%{kW}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kW}%?%+Lw%? %= %{= Wk}%110`%109`%122`%111`"
+caption always "%{= .w}%-Lw%20L>%{=b .c}%n%f %t%{-}%+Lw %-020= %D %d %M - %c"
