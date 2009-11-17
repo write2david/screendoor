@@ -1,0 +1,11 @@
+TODO
+
+1)  Add the "Entering GNU Screen, press any key to cancel."  (from porch.sh)
+	And similar for "Leaving GNU Screen."
+	Comment them both out, and add a line "Uncomment to enable message."
+
+2)  Remove need for "Cornerstone" window.
+
+3)  Shorter window names (how?) so they line up better at the bottom.
+
+4)  Copy/paste e-mail exchange into porch-note.txt
