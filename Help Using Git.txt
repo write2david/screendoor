@@ -66,7 +66,6 @@ git rm <file>
   remove all deleted files from the project  (both working dir and index)
   still need to commit before it is removed from repo
 
-
 git rm --cached <file>
 	unstage files from index, next commit will remove it from repo
 
