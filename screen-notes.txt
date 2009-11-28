@@ -1,0 +1,97 @@
+CURRENTLY: SOMETIMES HAVE TO HIT CTRL-Z TO GET TO BASH PROMPT
+	This is right after this message is displayed: "Now starting GNU Screen from .bashrc..."
+	This is the command that it hangs on:  screen -S main -x -p "`cat ~/screen.uniqueID.txt`"
+	When logging in (non-X-windows, Alt-F1), Ctrl-Z sometimes doesn't work, and you have to login about 5 times before it will give you a bash prompt.
+
+
+CURRENTLY: first time through .bash_login, checks to see if the "main" session is running, and if not it starts it (with a Cornerstone window) -- AND IF IT STARTS IT then .bash_login returns without ever making a new (user) window and so you 
+have to login again.
+
+
+CURRENTLY:  the "Cornerstone" window sometimes dies.  How?!  If it dies and then later all other windows close out, then the "main" session dies.  But this is not a major problem because the next shell will re-create the "main" window if needed.
+
+
+
+OUR CURRENT PROCESS:
+
+
+1A)  create screen:  screen -S main -d -m -t Main
+
+1B) screen -S main -p0 -X eval 'stuff "clear && echo && echo && echo This is a read-only window in order to hold open this main screen session. && echo && echo && sleep 99999999999d \015"'
+
+
+1C)  set multiuser:  screen -S main -X multiuser on
+
+1D)  set readonly from within:  screen -S main -X aclchg \* -w 0
+
+
+[this: screen -S main -X aclchg * -w 0
+	...will result in an error message displayed in that window: "aclchg: two or three arguments required"
+
+	and this works: screen -S main -X aclchg root -w 0
+
+	and this works, when doing Ctrl-A from within that window:   ":aclchg * -w 0"
+
+	so, the * must be escaped with the backslash]
+
+
+
+So, altogether in /etc/conf.d/local.start:
+echo "Wiping dead GNU Screen sessions..."
+screen -wipe > /dev/null
+echo "Starting main GNU Screen session..."
+
+OLD: #screen -S main -d -m -t Cornerstone &&  screen -S main -p0 -X eval 'stuff "clear && echo && echo && echo This is a read-only window in order to hold open this main screen session. && echo && echo && sleep 99999999999d \015"' && screen -S main -X multiuser on && screen -S main -X aclchg \* -w 0
+
+screen -S main -d -m -t NewWindow && screen -S main -p0 -X title Cornerstone && screen -S main -p0 -X eval 'stuff "clear && echo && echo && echo This is a read-only window in order to hold open this main screen session. && echo && echo && sleep 99999999999d \015"' && screen -S main -X multiuser on && screen -S main -X aclchg \* -w 0
+
+
+Notes: connect to session "main" (-S main), specifically the first window (-p0) and send the command (-X) called stuff.  Use the single and double-quotes to make sure it all gets sent as one string properly, and use "eval" and "\015" to indicate mean "linefeed" at the end (like pressing Enter" after the command.
+	-t = default name for new windows
+	-S main -p0 -X title  =  set the name of the first window that stays open
+
+
+
+Now, this is for .bashrc and .bash_login
+
+2A) connect with screen -S main -x
+
+OR:
+
+2B) screen -S main -X screen -t `echo $PPID`\ "`date +\(%m/%d\ @\ %I:%M%p\)`"
+
+OR:
+
+2C) screen -S main -X screen -t "`date +%m/%d\ @\ %I:%M%p` `echo \(Parent\:` `echo $PPID` `echo \\`  `date +%N`"
+
+OR:
+
+2D) echo `date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)` > ~/screen.uniqueID.txt && screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && screen -S main -X prev && screen -S main -x -p "`cat ~/screen.uniqueID.txt`"
+
+
+ONE PROBLEM w/X-forwarding (either from Linux or with Windows/Xming): the $DISPLAY variable doesn't get set on the new screen window bash prompt  (http://www.straightrunning.com/XmingNotes/trouble.php for info on this auto-setting).
+	So, you have to manually specify:  firefox --display:10     //   mousepad --display:10
+
+
+Maybe obsolete:
+
+
+      ONLY PROBLEM WITH THIS IS THAT IF I RUN IT, THEN RUN IT AGAIN, THEN IT'S RUNNING FROM W/IN THE FIRST, AND SO IT MAKES A NEW "main" SESSION and then there are two "main" sessions and it doesn't connect you to the first one
+	So, since that's the case, remove all the cases of  "-S main" from the command and the "-X prev" section, so:
+	echo `date +%N` > ~/screen.uniqueID.txt && screen -t `cat ~/screen.uniqueID.txt`
+
+		we want to replace Ctrl-A c with the previous line  (either as a colon-command or in .screenrc):
+		:bind c echo `date +%N` > ~/screen.uniqueID.txt && screen -t `cat ~/screen.uniqueID.txt`
+			the problem is that "echo" is also a screen command, so it doesn't run it by itself
+			so, we need to properly use the "exec" command
+
+		:bind c exec /root/screen-new.sh
+
+	Maybe this needs to be:
+		:bind c exec ... /root/screen-new.sh
+
+			screen-new.sh:
+			#!/bin/bash
+			echo `date +%N` > ~/screen.uniqueID.txt && screen -t `cat ~/screen.uniqueID.txt`
+
+	Sometimes, after creating a new tab, it creates a new window in that screen session but then it freezes, and you have to kill the window:   Ctrl-A K

@@ -1,8 +1,16 @@
 #!/bin/bash
 #
 #
+# Latest version is available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
 #
-# Start screen
+# Git: http://github.com/write2david/screendoor
+#
+# Why? http://tech.thedesignhut.net/gnu-screen
+#
+#
+#
+#
+# Start screen...
 #
 # Test for interactive shell, exit if not interactive:
          if [[ $- != *i* ]] ; then
