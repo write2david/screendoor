@@ -1,0 +1,118 @@
+BASIC GITHUB STUFF:
+git add [filename]
+git commit -m '[commit info]'
+git push github master
+
+[the "master" is optional, it specifies which local branch to push to github]
+
+
+
+
+
+
+BASIC GIT STUFF:   (more on http://cheat.errtheblog.com/s/git)
+
+
+
+HEAD = the current tip of the current branch
+	specified in the .git/HEAD file
+	the HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
+
+
+git commit -a
+  commit all files changed since your last commit
+  (does not include new (untracked) files)
+
+git commit -v
+
+git commit --amend
+  edit the commit message of the most recent commit
+
+git commit --amend <file1> <file2> ...
+  redo previous commit, including changes made to <file1>, <file2>, etc...
+
+
+git diff   /     show a diff of the changes made since your last commit
+	git diff -- <filename>    /    to diff one file
+git diff --cached        /     to show a diff between staging area and HEAD
+
+git status / show files added to the staging area, files with changes, and untracked files
+
+
+git log    /    show recent commits, most recent on top. Useful options:
+  --color       with color
+  --graph       with an ASCII-art commit graph on the left
+  --decorate    with branch and tag names on appropriate commits
+  --stat        with stats (files changed, insertions, and deletions)
+  -p            with full diffs
+
+
+
+git branch [new-branch-name]   =  create new branch from master branch
+
+git branch = list branches
+
+git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
+
+git merge [branch] = merge [branch] into your master branch
+
+git branch -d [branch]   = delete branch, ensuring all differences have been merged
+git branch -D [branch]   = delete branch, no matter whether all differences have been merged
+
+
+git reset HEAD <file>  =  to unstage file from index
+
+git rm <file>   
+  remove all deleted files from the project  (both working dir and index)
+  still need to commit before it is removed from repo
+
+
+git rm --cached <file>
+	unstage files from index, next commit will remove it from repo
+
+
+git pull = does both "fetch" and "merge"
+
+git reset = reset index (good for when copying another person's repo), to have no uncommmitted files in it.
+
+git repo is technically both the working dir and the .git dir, though often the repo's are distributed w/a blank working dir, a blank index, and just the .git directory
+
+
+rsync -rL rsync://rsync.kernel.org/pub/scm/git.git .git
+	...is the same idea as...
+git clone rsync://rsync.kernel.org/pub/scm/git/git.git/ my-git-test
+
+	(both require a "git checkout" after cd'ing into the new directory)
+	(-rL = recursive & preserve links)
+	(when using rsync, the HEAD is messed up.  Another person had the same trouble: http://lists.zerezo.com/git/msg675736.html)
+
+This server is also setup for this to work:
+	it clone git://git.kernel.org/pub/scm/git/git.git/ my-git-test
+
+
+
+
+
+ORIGINAL INSTRUCTIONS FOR GITHUB (the items below come from the GitHub repo-creation page):
+
+
+
+Global setup:
+
+  Download and install Git
+  git config --global user.name "Your Name"
+  git config --global user.email write2david@gmail.com
+  Add your public key
+        
+
+
+Example steps:
+
+  mkdir screendoor
+  cd screendoor
+  git init
+  touch README
+  git add README
+  git commit -m 'first commit'
+  git remote add origin git@github.com:write2david/screendoor.git
+  git push origin master
