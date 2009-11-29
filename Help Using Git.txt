@@ -3,19 +3,87 @@ git add [filename]
 git commit -m '[commit info]'
 git push github master
 
-[the "master" is optional, it specifies which local branch to push to github]
+	[the "master" is optional, it specifies which local branch to push to github]
 
 
 
-
-
-
-BASIC GIT STUFF:   (more on http://cheat.errtheblog.com/s/git)
-
+EXTRA HELP:
+Git Community Book
+http://cheat.errtheblog.com/s/git/
 man gittutorial
 man gittutorial-2
+git cheat sheet:   http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
 
 
+
+
+GUI Programs:
+gitk
+gitk -all
+qgit4
+git-gui or git gui
+
+
+
+BASIC GIT STUFF:
+
+
+========ORGANIZE THIS SECTION============
+git log -n3
+git log --stat --summary
+
+
+git diff HEAD^..HEAD
+To view the last changes you made
+
+
+Haven't committed yet, but don't want to save the changes? You can throw them away:
+git reset --hard
+
+
+
+Messed up the commit message? This will let you re-enter it:
+git commit --amend
+
+
+
+Forgot something in your last commit? That's easy to fix.
+    git reset --soft HEAD^
+    Add that stuff you forgot:
+    git add forgot.txt these.txt
+    Then write over the last commit:
+    git commit
+
+
+
+
+Getting in the habit of creating quality commit messages makes using and collaborating with Git a lot easier. As a general rule, your messages should start with a single line that's no more than about 50 characters and that describes the changeset concisely, followed by a blank line, followed by a more detailed explanation.
+
+
+===========ORGANIZE THE ABOVE SECTION============
+
+
+
+git add  =  does BOTH adding files to the scope of the project (they are now tracked) AND adding changes to the files to the staging area
+
+git add .  = add, recursively, all files
+
+
+git rm --cached  = does not remove the file from the working dir, but removes them from scope of the project (not tracked anymore) and they will be deleted from the git repo upon next commit.  Commits absence-of-file from the project.   git-show will display that it will be deleted from repo upon next commmit.   Is not used for unstaging a file, but rather it stages a file-deletion commit.
+
+
+git rm   =  removes the file in the working dir, removes them from the scope of the project (they are untracked -- well, actually they can't be tracked because they don't exist anymore), and they will be deleted from the repo upon the next commit.
+
+git add -u  = Tell git to remove files that are deleted in file system but not yet removed from index (instead of git rm on all of them)
+
+
+
+git log -p filename
+
+to let git generate the patches for each log entry
+
+
+git whatchanged -p [filename] 
 
 git status / show files added to the staging area, files with changes, and untracked files
 
@@ -54,10 +122,14 @@ git commit --amend <file1> <file2> ...
   redo previous commit, including changes made to <file1>, <file2>, etc...
 
 
-git diff   /     show a diff of the changes made since your last commit  (the dif b/t working directory and HEAD)
+
+git diff   /     show a diff of the changes made in working directory that are not staged for commit  (the dif b/t working directory and index)
 	git diff -- <filename>    /    to diff one file
 
-git diff --cached    /   to show a diff between staging area and HEAD
+git diff --cached    /   to show a diff between staging area and HEAD  (difference between index and last commit)
+
+git diff HEAD  /   shows changes in working directory since last commit  (what would be commit if you run "git commit -a")
+
 
 
 git whatchanged
@@ -72,6 +144,11 @@ git log    /    show history of recent commits, most recent on top. Useful optio
   -p            with full diffs
 
 
+git log v2.5    = show commits since (not reachable from) tag of "v2.5"
+
+git log [file]  =  show commits that modify [file]
+
+
 git tag [title] [SHA1-1]  = create a "lightweight tag" which points to a certain commit (specified by its SHA-1).  Cannot be signed.
 
 git tag -a (or -s) -m "[msg]"  [tagname]  [SHA-1]   = create a tag object, which can be signed
@@ -83,6 +160,9 @@ git branch = list branches
 
 git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
 git checkout -- [name of file]   = add or replace [file] from repo into working directory
+git checkout [SHA-1]  = Examine an earlier version of your source
+git checkout [SHA-1 of tree] [name of file]  = checkout file from certain tree
+	[good to do "git log [filename]" first to find out which tree]
 
 git merge [branch] = merge [branch] into your master branch
 
@@ -94,13 +174,6 @@ git reset = reset index (good for when copying another person's repo), to have n
 git reset HEAD <file>  =  to unstage file from index
 git reset --hard HEAD^  = reset both repo branch and current working directory to the parent of HEAD  (lose changes in working directory and the later commits of the branch)
 
-
-git rm <file>   
-  remove all deleted files from the project  (both working dir and index)
-  still need to commit before it is removed from repo
-
-git rm --cached <file>
-	unstage files from index, next commit will remove it from repo
 
 
 git pull = does both "fetch" and "merge"
