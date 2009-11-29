@@ -12,15 +12,37 @@ git push github master
 
 BASIC GIT STUFF:   (more on http://cheat.errtheblog.com/s/git)
 
+man gittutorial
+man gittutorial-2
 
 
-HEAD = the current tip of the current branch
+
+git status / show files added to the staging area, files with changes, and untracked files
+
+
+
+HEAD = the current tip of the current branch in the repo
 	specified in the .git/HEAD file
 	the HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
 
 
+git show HEAD = show the tip of the current branch, including the SHA-1 of its commit (which is the same commit as listed in the .git/HEAD file mentioned above)
+
+git show HEAD^ = show the parent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
+
+git show HEAD^^ = show the grandparent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
+
+git show HEAD~4 = show the great-great-grandparent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
+
+git show [SHA-1]  =  show info on the commit specified by the SHA-1
+
+
+git show [branch]  = show tip of the specified branch
+
+
+
 git commit -a
-  commit all files changed since your last commit
+  commit all files modified since your last commit
   (does not include new (untracked) files)
 
 git commit -v
@@ -32,14 +54,17 @@ git commit --amend <file1> <file2> ...
   redo previous commit, including changes made to <file1>, <file2>, etc...
 
 
-git diff   /     show a diff of the changes made since your last commit
+git diff   /     show a diff of the changes made since your last commit  (the dif b/t working directory and HEAD)
 	git diff -- <filename>    /    to diff one file
-git diff --cached        /     to show a diff between staging area and HEAD
 
-git status / show files added to the staging area, files with changes, and untracked files
+git diff --cached    /   to show a diff between staging area and HEAD
 
 
-git log    /    show recent commits, most recent on top. Useful options:
+git whatchanged
+	-p	Show text content of diffs, instead of just git's internal diff output format (which  is useful only to tell the changed paths and their nature of changes.
+
+
+git log    /    show history of recent commits, most recent on top. Useful options:
   --color       with color
   --graph       with an ASCII-art commit graph on the left
   --decorate    with branch and tag names on appropriate commits
@@ -47,12 +72,17 @@ git log    /    show recent commits, most recent on top. Useful options:
   -p            with full diffs
 
 
+git tag [title] [SHA1-1]  = create a "lightweight tag" which points to a certain commit (specified by its SHA-1).  Cannot be signed.
+
+git tag -a (or -s) -m "[msg]"  [tagname]  [SHA-1]   = create a tag object, which can be signed
+
 
 git branch [new-branch-name]   =  create new branch from master branch
 
 git branch = list branches
 
 git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
+git checkout -- [name of file]   = add or replace [file] from repo into working directory
 
 git merge [branch] = merge [branch] into your master branch
 
@@ -60,7 +90,10 @@ git branch -d [branch]   = delete branch, ensuring all differences have been mer
 git branch -D [branch]   = delete branch, no matter whether all differences have been merged
 
 
+git reset = reset index (good for when copying another person's repo), to have no uncommmitted files in it.
 git reset HEAD <file>  =  to unstage file from index
+git reset --hard HEAD^  = reset both repo branch and current working directory to the parent of HEAD  (lose changes in working directory and the later commits of the branch)
+
 
 git rm <file>   
   remove all deleted files from the project  (both working dir and index)
@@ -72,7 +105,6 @@ git rm --cached <file>
 
 git pull = does both "fetch" and "merge"
 
-git reset = reset index (good for when copying another person's repo), to have no uncommmitted files in it.
 
 git repo is technically both the working dir and the .git dir, though often the repo's are distributed w/a blank working dir, a blank index, and just the .git directory
 
