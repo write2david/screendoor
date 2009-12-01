@@ -12,7 +12,9 @@ Git: http://github.com/write2david/screendoor
 
 INTRODUCTION 
 
-It is so nice to be able to login directly at my computer, or SSH, or open an xterm, etc and always be placed inside a pre-existing screen session, able to access all my other screen windows.
+It is so nice to be able to login at my computer (directly, or over SSH, or opening an xterm/Terminal window, etc.) and always be placed inside a pre-existing screen session, able to access all other open terminals.
+        This also lets you disconnect from your SSH (perhaps using Putty) connection and the program remains running.
+
 
 My code is not formatted the best.   I have a fair amount of comments along the way in each file, detailing the screen-related issues for dealing with logins that happen in situations like SCP and x-ming, and if x-windows is running from within screen and then you open a xterm w/in that, etc.
 
