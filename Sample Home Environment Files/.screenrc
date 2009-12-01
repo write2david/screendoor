@@ -6,69 +6,88 @@
 #
 #
 # Allow for long scrolling (Ctrl-A, Esc)
-defscrollback 10000
+  defscrollback 10000
 #
 #
 #
 #  UNCOMMENT ONE OF THE FOLLOWING "CAPTION" LINES, IF DESIRED
 #  To learn how to write the caption codes, see the "STRING ESCAPES" section of the screen man page.
 #
-#  List window titles & numbers along the bottom, the current one is bold turquoise.
-#  Date & time on bottom-right.
+#
+#  **List window titles & numbers along the bottom, the current one is bold turquoise.
+#    Date & time on bottom-right, 20 spaces over from the right-edge.
+#
+#  Explanation:
+#  Set the color and formatting for the non-current windows:  %{= .w}
+#  Show the windows up until the current window, truncating as necessary: %-Lw
+#  More truncation:  %20L>
+#  Set the color and formatting for the current window: %{=b .g}
+#  Show the current window's number and title, with "flags of the window" code: %n%f %t%
+#  As  a special case, "%{-}" restores the attributes and colors that were set before the last change was made (from man page)
+#  List the windows that are numbered higher than the current window:  %+Lw
+#  Date and time on the right:  %-020= %D %d %M - %c
 #  caption always "%{= .w}%-Lw%20L>%{=b .c}%n%f %t%{-}%+Lw %-020= %D %d %M - %c"
 #
 #
-#  Grey bar along the bottom with windows listed horizontally by title & number.
+#  **The same as above, WITHOUT the date and time on the right
+#    And WITH the current window in GREEN
+#    Also, remove the "flags of the window" code  (%f)
+  caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
+#
+#
+#  **Grey bar along the bottom with windows listed horizontally by title & number.
 #  Hightlight the current window with blue.
 #  caption always "%{kW}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kW}%?%+Lw%? %= %{= Wk}%110`%109`%122`%111`"
 #
 #
-#  Grew bar long bottom, current window number & title is only one listed in bottom-left.
+#  **Grey bar long bottom, current window number & title is only one listed in bottom-left.
 #  Time is listed in bottom-right.
 #  caption always "%3n %t%? @%u%?%? [%h]%?%=%c"
 #
 #
 #
-# The statusbar's features include:
-#  -Host name at the left end. (bold if active split region)
-#  -Date and time (mm-dd HH:MM) at the right end. (bold if active split region)
-#  -Window numbers, status chars and names in the middle;
-#    if there's not enough space, the list is abbreviated at the left and/or
-#    right end in such a way that the host name, date/time and current window
-#    are always visible. The current window is displayed in bold.
-caption always '%?%F%{!b}%?%H%?%F%{-}%?|%0L=%-Lw%{!b}%50L>%n*%f %t%{-}%+Lw%-12=|%?%F%{!b}%?%m-%d %0c%?%F%{-}%?'
+#  **The statusbar's features include:
+#     -Host name at the left end. (bold if active split region)
+#     -Date and time (mm-dd HH:MM) at the right end. (bold if active split region)
+#     -Window numbers, status chars and names in the middle;
+#        if there's not enough space, the list is abbreviated at the left and/or
+#        right end in such a way that the host name, date/time and current window
+#        are always visible. The current window is displayed in bold.
+#  caption always '%?%F%{!b}%?%H%?%F%{-}%?|%0L=%-Lw%{!b}%50L>%n*%f %t%{-}%+Lw%-12=|%?%F%{!b}%?%m-%d %0c%?%F%{-}%?'
 #
 #
 #
-# This next one created by Brad Sims <tanfj@yahoo.com> 25/06/2004
 #
-# Note the embeded space after the colon, I feel
-#  it just looks nicer with a blank between the
-#  text and console edge:
-#   '%{=b}%{G} Screens: '
+#  **This next one created by Brad Sims <tanfj@yahoo.com> 25/06/2004
 #
-# This prints the window listing in blue:
-#   '%{b}%w'
+#   Note the embeded space after the colon, I feel
+#    it just looks nicer with a blank between the
+#    text and console edge:
+#     '%{=b}%{G} Screens: '
 #
-# This right-aligns what follows:
-#   '%='
+#   This prints the window listing in blue:
+#     '%{b}%w'
 #
-# This displays the time (hours and minutes) in 12hr format
-# and adds an AM/PM flag, in bold green:
-#   '%{G}%C%A'
+#   This right-aligns what follows:
+#     '%='
 #
-# This displays the day of the week:
-#   '%D'
+#   This displays the time (hours and minutes) in 12hr format
+#   and adds an AM/PM flag, in bold green:
+#     '%{G}%C%A'
 #
-# This displays the date in Mon/day/year format:
-# and again I embeded a space to give me one space
-# between the text and console edge:
-#  '%M/%d/%Y '
+#   This displays the day of the week:
+#     '%D'
 #
-# The resultsing command give you a status line that
-#  looks like this:
-#   | Screens: 0* bash  <blanks zapped>         5:30PM  Fri, Jun/25/2004 |
-#  (The pipes indicate the edges of the xterm/console).
+#   This displays the date in Mon/day/year format:
+#   and again I embeded a space to give me one space
+#   between the text and console edge:
+#     '%M/%d/%Y '
+#
+#   The resultsing command give you a status line that
+#       looks like this:
+#    | Screens: 0* bash  <blanks zapped>         5:30PM  Fri, Jun/25/2004 |
+#
+#       (The pipes indicate the edges of the xterm/console).
 #
 # Green text, time, and date; windows in blue:
-hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "
+#  hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "
