@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#Available for download at:  http://github.com/write2david/screendoor/blob/master/??????
-#Git: http://github.com/write2david/screendoor
+# Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.bash_login
+# Git: http://github.com/write2david/screendoor
 #
 # Show current directory or current running program in X-windows terminal window
 # From http://mg.pov.lt/blog/bash-prompt.html  // added this to enable screen shell:   |screen*
@@ -32,4 +32,5 @@ xterm*|rxvt*|screen*)
     ;;
 esac
 
+# This next line executes screendoor ("sources screendoor").  Leave it as the LAST command in your bashrc file.
 . ~/screendoor.sh

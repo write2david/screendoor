@@ -1,8 +1,74 @@
-#Available for download at:  http://github.com/write2david/screendoor/blob/master/??????
-#Git: http://github.com/write2david/screendoor
+# Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.screenrc
+# Git: http://github.com/write2david/screendoor
 #
+#
+# I like the default screen keybindings, so I won't change any.
+#
+#
+# Allow for long scrolling (Ctrl-A, Esc)
 defscrollback 10000
 #
-# Window tabs, second to last line
-# caption always "%{kW}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kW}%?%+Lw%? %= %{= Wk}%110`%109`%122`%111`"
-caption always "%{= .w}%-Lw%20L>%{=b .c}%n%f %t%{-}%+Lw %-020= %D %d %M - %c"
+#
+#
+#  UNCOMMENT ONE OF THE FOLLOWING "CAPTION" LINES, IF DESIRED
+#  To learn how to write the caption codes, see the "STRING ESCAPES" section of the screen man page.
+#
+#  List window titles & numbers along the bottom, the current one is bold turquoise.
+#  Date & time on bottom-right.
+#  caption always "%{= .w}%-Lw%20L>%{=b .c}%n%f %t%{-}%+Lw %-020= %D %d %M - %c"
+#
+#
+#  Grey bar along the bottom with windows listed horizontally by title & number.
+#  Hightlight the current window with blue.
+#  caption always "%{kW}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kW}%?%+Lw%? %= %{= Wk}%110`%109`%122`%111`"
+#
+#
+#  Grew bar long bottom, current window number & title is only one listed in bottom-left.
+#  Time is listed in bottom-right.
+#  caption always "%3n %t%? @%u%?%? [%h]%?%=%c"
+#
+#
+#
+# The statusbar's features include:
+#  -Host name at the left end. (bold if active split region)
+#  -Date and time (mm-dd HH:MM) at the right end. (bold if active split region)
+#  -Window numbers, status chars and names in the middle;
+#    if there's not enough space, the list is abbreviated at the left and/or
+#    right end in such a way that the host name, date/time and current window
+#    are always visible. The current window is displayed in bold.
+caption always '%?%F%{!b}%?%H%?%F%{-}%?|%0L=%-Lw%{!b}%50L>%n*%f %t%{-}%+Lw%-12=|%?%F%{!b}%?%m-%d %0c%?%F%{-}%?'
+#
+#
+#
+# This next one created by Brad Sims <tanfj@yahoo.com> 25/06/2004
+#
+# Note the embeded space after the colon, I feel
+#  it just looks nicer with a blank between the
+#  text and console edge:
+#   '%{=b}%{G} Screens: '
+#
+# This prints the window listing in blue:
+#   '%{b}%w'
+#
+# This right-aligns what follows:
+#   '%='
+#
+# This displays the time (hours and minutes) in 12hr format
+# and adds an AM/PM flag, in bold green:
+#   '%{G}%C%A'
+#
+# This displays the day of the week:
+#   '%D'
+#
+# This displays the date in Mon/day/year format:
+# and again I embeded a space to give me one space
+# between the text and console edge:
+#  '%M/%d/%Y '
+#
+# The resultsing command give you a status line that
+#  looks like this:
+#   | Screens: 0* bash  <blanks zapped>         5:30PM  Fri, Jun/25/2004 |
+#  (The pipes indicate the edges of the xterm/console).
+#
+# Green text, time, and date; windows in blue:
+hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "

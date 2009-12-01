@@ -161,7 +161,7 @@ git branch = list branches
 git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
 git checkout -- [name of file]   = add or replace [file] from repo into working directory
 git checkout [SHA-1]  = Examine an earlier version of your source
-git checkout [SHA-1 of tree] [name of file]  = checkout file from certain tree
+git checkout [SHA-1 of tree-ish: a tree, commit, or tag] [name of file]  = checkout file from certain tree
 	[good to do "git log [filename]" first to find out which tree]
 
 git merge [branch] = merge [branch] into your master branch

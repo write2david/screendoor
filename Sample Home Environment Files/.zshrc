@@ -1,5 +1,5 @@
-#Available for download at:  http://github.com/write2david/screendoor/blob/master/??????
-#Git: http://github.com/write2david/screendoor
+# Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.zshrc
+# Git: http://github.com/write2david/screendoor
 
 precmd() {
 
