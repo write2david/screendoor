@@ -56,6 +56,18 @@
 #  caption always '%?%F%{!b}%?%H%?%F%{-}%?|%0L=%-Lw%{!b}%50L>%n*%f %t%{-}%+Lw%-12=|%?%F%{!b}%?%m-%d %0c%?%F%{-}%?'
 #
 #
+#  **Not sure how this one looks:
+#   caption always '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+#
+#
+#
+#  **Not sure how this one looks:
+#   caption always '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f %t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}
+%Y-%m-%d %{W}%c %{g}]'
+#
+#
+#  **Not sure how this one looks:
+#   caption always "%{= wb}$USER @ %H >> %-Lw%{= r}%50>%n* %t%{-}%+Lw%< %-=<< (%c.%s)"
 #
 #
 #  **This next one created by Brad Sims <tanfj@yahoo.com> 25/06/2004
