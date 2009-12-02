@@ -1,16 +1,31 @@
 SCREENDOOR
 
-http://tech.thedesignhut.net/gnu-screen
+Website:  http://tech.thedesignhut.net/gnu-screen
 
-Available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
-
+Latest version available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
 
 Git: http://github.com/write2david/screendoor
 
 
 
+INTRODUCTION TO SCREEN
 
-INTRODUCTION 
+Official Project Websites:
+      http://www.gnu.org/software/screen/
+      http://savannah.gnu.org/projects/screen/
+
+
+Wikipedia summary:  http://en.wikipedia.org/wiki/GNU_Screen
+
+
+Introduction to Features & How-to Guides: 
+      From Debian:  http://www.debian-administration.org/articles/34
+      From Sun Microsystems:  http://www.sun.com/bigadmin/features/articles/gnu_screen.html
+      From RedHat:  http://magazine.redhat.com/2007/09/27/a-guide-to-gnu-screen/
+
+
+
+INTRODUCTION TO SCREENDOOR
 
 It is so nice to be able to login at my computer (directly, or over SSH, or opening an xterm/Terminal window, etc.) and always be placed inside a pre-existing screen session, able to access all other open terminals.
         This also lets you disconnect from your SSH (perhaps using Putty) connection and the program remains running.
