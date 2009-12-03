@@ -30,6 +30,7 @@
 #
 #
 #  **The same as above, WITHOUT the date and time on the right
+#    (when the time changes while you are doing Ctrl-PgUp, it drops you back down to the bottom)
 #    And WITH the current window in GREEN
 #    Also, remove the "flags of the window" code  (%f)
   caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
