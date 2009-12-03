@@ -1,6 +1,6 @@
 TODO
 
-1)  WinSCP logs in, activating .bashrc  (not .bash_profile) and line sourcing screendoor causes an exit status of 0 which prevents WinSCP login.
+1)  When WinSCP logs in, it activates .bash_login, and the sourcing of screendoor prevents WinSCP login.
 
 2)  Remove the call to zsh in the screendoor.sh file.
 
