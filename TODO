@@ -1,6 +1,6 @@
 TODO
 
-1)  When WinSCP logs in, it activates .bash_login, and the sourcing of screendoor prevents WinSCP login.
+1)  Bug: When WinSCP logs in, it activates .bash_login, and the sourcing of screendoor prevents WinSCP login.
 
 2)  Remove the call to zsh in the screendoor.sh file.
 
@@ -8,8 +8,10 @@ TODO
 	And similar for "Leaving GNU Screen."
 	Comment them both out, and add a line "Uncomment to enable message."
 
-4)  Remove need for "Cornerstone" window.
+4)  Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
 
 5)  Shorter window names (how?) so they line up better at the bottom.
 
 6)  Copy/paste e-mail exchange into porch-note.txt
+
+7)  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.

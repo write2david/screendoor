@@ -54,3 +54,20 @@ For example:
 TIPS
 
 Clone this git repo, check it out, and then softlink your .bash_login, .screenrc, etc to the checked-out repo (working directory).
+
+
+
+
+.bash_login is triggered by starting a new:
+
+SSH login   (this is NOT run from w/in screen)
+F1, F2, etc login  (this is NOT run from w/in screen)
+"Ctrl-A c"  (this IS run from w/in screen)
+manually typing "screen" on the command-line (this IS run from w/in screen)
+
+
+.bashrc is triggered by:
+
+beginning an xterm window
+creating a new tab in an xterm window
+running "screen -ln bash --noprofile"

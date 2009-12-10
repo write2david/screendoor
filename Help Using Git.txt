@@ -89,7 +89,7 @@ git status / show files added to the staging area, files with changes, and untra
 
 
 
-HEAD = the current tip of the current branch in the repo
+HEAD = the current tip of the current branch, the last (most recent) commit of the branch.
 	specified in the .git/HEAD file
 	the HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
 
@@ -170,10 +170,36 @@ git branch -d [branch]   = delete branch, ensuring all differences have been mer
 git branch -D [branch]   = delete branch, no matter whether all differences have been merged
 
 
-git reset = reset index (good for when copying another person's repo), to have no uncommmitted files in it.
+git reset = Sets the current head to the specified commit and optionally resets the index and working tree to match. This command is useful if you notice some small error in a recent commit (or set of commits) and want to redo that part without showing the undo in the history.  (If you want to undo a commit other than the latest on a branch, git-revert is your friend.)
+
+       --mixed
+           Resets the index but not the working tree (i.e., the changed files
+           are preserved but not marked for commit) and reports what has not
+           been updated. This is the default action.
+
+       --soft
+           Does not touch the index file nor the working tree at all, but
+           requires them to be in a good order. This leaves all your changed
+           files "Changes to be committed", as git-status would put it.
+
+       --hard
+           Matches the working tree and index to that of the tree being
+           switched to. Any changes to tracked files in the working tree since
+           <commit> are lost.
+
+       --merge
+           Resets the index to match the tree recorded by the named commit,
+           and updates the files that are different between the named commit
+           and the current commit in the working tree.
+
+
+git reset = reset index to HEAD (and not the working tree)  --  recommended for when copying another person's repo, to make sure there are no staged-but-uncommmitted files.
+
 git reset HEAD <file>  =  to unstage file from index
+git reset HEAD  = unstage all files from index
 git reset --hard HEAD^  = reset both repo branch and current working directory to the parent of HEAD  (lose changes in working directory and the later commits of the branch)
 
+git reset --hard HEAD~3  = The last three commits (HEAD, HEAD^, and HEAD~2) were bad and            you do not want to ever see them again. Do not do this if you have already given these commits to somebody else. 
 
 
 git pull = does both "fetch" and "merge"
