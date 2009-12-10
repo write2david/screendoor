@@ -64,6 +64,7 @@ SSH login   (this is NOT run from w/in screen)
 F1, F2, etc login  (this is NOT run from w/in screen)
 "Ctrl-A c"  (this IS run from w/in screen)
 manually typing "screen" on the command-line (this IS run from w/in screen)
+Using WinSCP (this is NOT run from w/in screen)
 
 
 .bashrc is triggered by:
