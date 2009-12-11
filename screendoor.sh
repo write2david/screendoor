@@ -9,19 +9,29 @@
 #
 #
 #
+# Great Bash help / howto page:
+# http://www.panix.com/~elflord/unix/bash-tute.html
 #
-# Start screen...
+# NOTE:
+# When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
 #
-# Test for interactive shell, exit if not interactive:
+#
+# First, test for an interactive shell, and exit if not interactive.
+#    -- No need for screen if the user won't be interacting with the shell.
+#    -- This also prevents screen from running when it would confuse another program (like scp) that doesn't use an interactive shell.
+#    -- For more info, see:
+#            http://theory.uwinnipeg.ca/localfiles/infofiles/bash/bashref_54.html)
+#            http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_01_02.html#sect_01_02_02_03
+
          if [[ $- != *i* ]] ; then
          # Shell is non-interactive.  Be done now!
-         exit
+         return   # use 'return', not 'exit', since we just want to prevent execution of further code in this script, not exit the non-interactive shell and thus mess up the program that needed it / spawned it 
          fi
 
 # This checks to see if something like WinSCP is logging in.  WinSCP definitely doesn't like it when SCREEN runs while it's logging in.
 case ${TERM} in
         dumb)
-	exit     ;;
+	return     ;;
 	esac
 #
 # We want to start screen on all shell prompts, not just all logins.
@@ -42,6 +52,9 @@ case ${TERM} in
 #       Screen again.
 # Inspired by:
 #       http://forums.whirlpool.net.au/forum-replies-archive.cfm/324661.html
+#
+#
+#  Finally, let's start screen:
 #
 if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 then
