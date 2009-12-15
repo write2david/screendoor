@@ -3,6 +3,8 @@ TODO
 1)  Remove the call to zsh in the screendoor.sh file.
 
 2)  Add the "Entering GNU Screen, press any key to cancel."  (from porch.sh)
+	And, "You are now in GNU Screen (via screendoor)."
+	And, if we detect that this is a login shell (SSH, virtual console (F1, F2, etc): "Press Ctrl-Up to view any login-related messages (such as SSH port-forwarding issues, etc)."  # Issue is that auto-running screen at login clears the screen and then you miss any login-related messages.  Perhaps see if removing the "clear" command from screendoor.sh fixes the problem.  Can't test this over SSH since "clear" does not affect with Putty the same way it does in-person.
 	And similar for "Leaving GNU Screen."
 	Comment them both out, and add a line "Uncomment to enable message."
 
