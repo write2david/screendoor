@@ -36,6 +36,12 @@
   caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
 #
 #
+#
+# Fix Backspace key for when Backspace, instead of deleting to the left, produces these characters:  ^?
+# From: http://www.deadlock.it/200902/fix-gnu-screen-backspace-misinterpretation/
+bindkey -d ^? stuff ^H
+bindkey -d ^@ stuff ^H
+#
 #  **Grey bar along the bottom with windows listed horizontally by title & number.
 #  Hightlight the current window with blue.
 #  caption always "%{kW}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kW}%?%+Lw%? %= %{= Wk}%110`%109`%122`%111`"
@@ -70,6 +76,8 @@
 #  **Not sure how this one looks:
 #   caption always "%{= wb}$USER @ %H >> %-Lw%{= r}%50>%n* %t%{-}%+Lw%< %-=<< (%c.%s)"
 #
+#  **Not sure how this one looks:
+#   caption always "%{= kG}%H [%Y%m%d %c]: %-Lw%{= bW}%50<%n%f* %t%{-}%+Lw%>"
 #
 #  **This next one created by Brad Sims <tanfj@yahoo.com> 25/06/2004
 #
