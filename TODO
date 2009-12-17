@@ -1,6 +1,9 @@
 TODO
 
 1)  Remove the call to zsh in the screendoor.sh file.
+	If removing the call, then if you add a line to .zshrc for it to call screendoor (. ~/screendoor.sh) then it will land you in a bash prompt since screendoor is written in bash.
+	Don't know how to avoid this, except with the current call WITHIN screendoor to zsh.  And if going to do that, then you can't have .zshrc call screendoor, since it will then loop.
+
 
 2)  Add the "Entering GNU Screen, press any key to cancel."  (from porch.sh)
 	And, "You are now in GNU Screen (via screendoor)."
@@ -8,10 +11,21 @@ TODO
 	And similar for "Leaving GNU Screen."
 	Comment them both out, and add a line "Uncomment to enable message."
 
+
 3)  Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
+
 
 4)  Shorter window names (how?) so they line up better at the bottom.
 
+
 5)  Copy/paste e-mail exchange into porch-note.txt
 
+
 6)  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.
+	Seems that the messages are sent to /dev/ttyS0.
+	cat /dev/ttyS0   --  this will catch them and display them
+	so maybe the "shutdown" command needs to be "shutdown && cat /dev/ttyS0"
+
+
+7) Backspace produces ^? at virtual console and over SSH.
+	Fixed with commit 99defec74eb7602e55dac23d52e55a19e73d1be5  ??
