@@ -66,8 +66,12 @@ Getting in the habit of creating quality commit messages makes using and collabo
 
 git add  =  does BOTH adding files to the scope of the project (they are now tracked) AND adding changes to the files to the staging area
 
+>If Git already has the file in the repository, then git-add makes it seem like git has Alzheimer's and you have to introduce it to the same new person twice.  Actually, what git add does is to move the current version of the named file to a special staging area, holding files that are ready to be committed.  The GitHub blog reports that git add may soon take on the new name git-stage, to reflect this.
+
+
 git add .  = add, recursively, all files
 
+git add *  or   git add *.txt  =  Fileglobs (e.g. *.c) can be given to add all matching files.
 
 git rm --cached  = does not remove the file from the working dir, but removes them from scope of the project (not tracked anymore) and they will be deleted from the git repo upon next commit.  Commits absence-of-file from the project.   git-show will display that it will be deleted from repo upon next commmit.   Is not used for unstaging a file, but rather it stages a file-deletion commit.
 
