@@ -1,4 +1,5 @@
 # Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.zshrc
+#
 # Git: http://github.com/write2david/screendoor
 
 precmd() {
@@ -198,7 +199,10 @@ setopt \
 	EXTENDED_HISTORY \
 	HIST_IGNORE_ALL_DUPS \
 	HISTVERIFY \
+	nohup \
 #	zle
+
+#  The "nohup" option means that background jobs will not be hung up (nohup = no-hang-up) when you exit out of the zsh shell.  For info on the nohup option above see http://zsh.sourceforge.net/FAQ/zshfaq03.html#l35 | http://www.quantprinciple.com/invest/index.php/docs/tipsandtricks/unix/jobcontrol/   |   http://en.wikipedia.org/wiki/Nohup
 
 unsetopt EQUALS
 
