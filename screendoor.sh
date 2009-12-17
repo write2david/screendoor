@@ -54,12 +54,12 @@ case ${TERM} in
 #       http://forums.whirlpool.net.au/forum-replies-archive.cfm/324661.html
 #
 #
-#  Finally, let's start screen:
 #
 if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 then
+#  Finally, let's start screen:
 	screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
-	clear
+	clear # does this line do anything?
 	#echo ""
 	#echo "Last login:"
 	# What this next line does: grab the first three logins (most recent)
@@ -91,7 +91,6 @@ then
 	#echo "      (Your x-windows \$DISPLAY now is...  $DISPLAY)"
 	# Ended up commenting out the next line b/c in an XTERM, when using "Ctrl-A c" to create screen windows there was no ~/screen.xDISPLAY.txt files so the DISPLAY variable was not set in that session, not good for starting Xwindows applications.  So, no removal of the file, it is overwritten whenever needed, and new windows can just use whatever the last variable was set to in this file.
 	#rm -f ~/screen.xDISPLAY.txt
-	echo ""
 	zsh && exit
 else
 #
