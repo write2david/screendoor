@@ -13,6 +13,10 @@
 # http://www.panix.com/~elflord/unix/bash-tute.html
 #
 # NOTE:
+# This file gets run every time a shell starts (which includes every time screen starts)
+# So, if screen is already running (that is, if the parent process of this script is "screen" -- the line above tests this), then we just connect to the already-created window
+# Login -> shell startup script -> run screendoor (setup Cornerstone and new window) -> [start screen] -> prompts new shell -> shell startup script (which prompts running this file, now going down to this section) -> screendoor connects to new window
+
 # When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
 #
 #
@@ -34,6 +38,7 @@ case ${TERM} in
 	return     ;;
 	esac
 #
+#
 # We want to start screen on all shell prompts, not just all logins.
 # This way we can connect to even xterm tabs in XFCE.
 # But if we start screen on all  prompts, then we'll run into this problem:
@@ -54,16 +59,21 @@ case ${TERM} in
 #       http://forums.whirlpool.net.au/forum-replies-archive.cfm/324661.html
 #
 #
+#  This next line will check to see if parent process equals (see the colon) "SCREEN"
+#  If it does, that means that screen has called this file via the shell login files,
+#		or via "Ctrl-A c"
 #
 if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 then
-# This file gets run every time a shell starts (which includes every time screen starts)
-# So, if screen is already running (that is, if the parent process of this script is "screen" -- the line above tests this), then we just connect to the already-created window
-# Login -> shell startup script -> run screendoor (setup Cornerstone and new window) -> [start screen] -> prompts new shell -> shell startup script -> screendoor connects to new window
-# Then we don't want to run screen again. We just want to connect to the screen session that was made:
-	#screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
+	# If the new screen window was created with a new SSH/login screen or new xterm tab, then it will have created
+		# a window that is already properly-named (bottom part of file does this, we have cycled through it already).
+	# If the new screen window was created with "Ctrl-A c" then it will be named the default (see below) "New Window"
+		# in which case we need to rename it here:
+   screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
 	clear # does this line do anything?
-	#echo ""
+	# Can do this? rm ~/screen.xDISPLAY.txt
+	# Try it, then run xMing, and if it works, then do the rm line
+	#
 	#echo "Last login:"
 	# What this next line does: grab the first three logins (most recent)
 	# produced by the "last" command. The first one is the current one,
@@ -106,7 +116,6 @@ else
 screen -wipe > /dev/null 
 #
 #
-echo 'Starting GNU Screen ("main" session) from screendoor.sh...'
 #
 # start main session if not already started:
 #(Do not do "exec" before this next"screen" command since for some reason it won't do anything.)
@@ -119,8 +128,15 @@ echo 'Starting GNU Screen ("main" session) from screendoor.sh...'
 	# 
 	#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
 	#
-	#  Start session "main."  From screen man page: Start screen in "detached" mode. This creates a new session but doesn't  attach  to  it.  This  is  useful for  system startup scripts:
-	screen -S main -d -m -t Cornerstone sleep 99999999999d && \
+	#  Start session "main."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
+	echo 'Starting GNU Screen session "main"...'
+	# Create new session anmed "main" with the first window titled "NewTitle"
+		# This means "NewTitle" will be the default for all newly created windows.
+		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to name it that way
+			# immediately because then when we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" 
+	screen -S main -d -m -t NewTitle sleep 99999999999d && \
+	# Rename the window title...	
+	screen -S main -p0 -X title Cornerstone && \
 	# Give a message using stuff (015 = newline?):
 	sleep 0.2 && screen -S main -p0 -X eval 'stuff "This a read-only window in order to hold open this main screen session. \015"'&& \
 	# Set the session as "multiuser"
@@ -141,8 +157,10 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 #
 #
 #  Big multi-line command, using "\" to do multi-line and "&&" to string commands together.
-	# dump the date/time to a file:
+	# dump the date/time to a file, will be used to name the screen window.
+	#echo "Starting GNU Screen new window."
 	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
+	echo 'Starting GNU Screen new window...'
 	# Use "-X" to send a command and then immediately return.  The command is: create a new window on "main" session named [content from file]:
 	screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && \
 	# sleep to make sure everything catches up:
@@ -153,9 +171,12 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 	sleep 0.2 && \
 	# Use "-x" to attached to the window named [content from file]:
 	screen -S main -x -p "`cat ~/screen.uniqueID.txt`" && \
+	# We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window
+        rm ~/screen.uniqueID.txt && \
+
+	# Exit the shell that called this script.  Now only the new screen window (and the shell that IT prompted) are running (?)
 	exit
-# Above line does this: put the date in a file, create a new screen window with a name based on the date in the file, creating the new window pushes all the instances of screen to the next window so bring them all back to the previous, then connect to the new screen window we just made.
-#	The above command is held up at connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& clear && exit" comes in, saying clear the screen and exit out of screendoor
+#	The above command is held up at connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& exit" comes in, saying clear the screen and exit out of screendoor
 #
 #
 # PROBLEM/WORKAROUND: the problem with running screen plainly that
