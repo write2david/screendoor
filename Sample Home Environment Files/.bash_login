@@ -32,5 +32,5 @@ xterm*|rxvt*|screen*)
     ;;
 esac
 
-# This next line executes screendoor ("sources screendoor").  Leave it as the LAST command in your bashrc file.
+# This next line executes screendoor ("sources screendoor").  Leave it as the LAST command in your. bash_login file.
 . ~/screendoor.sh
