@@ -57,8 +57,11 @@ case ${TERM} in
 #
 if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 then
-#  Finally, let's start screen:
-	screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
+# This file gets run every time a shell starts (which includes every time screen starts)
+# So, if screen is already running (that is, if the parent process of this script is "screen" -- the line above tests this), then we just connect to the already-created window
+# Login -> shell startup script -> run screendoor (setup Cornerstone and new window) -> [start screen] -> prompts new shell -> shell startup script -> screendoor connects to new window
+# Then we don't want to run screen again. We just want to connect to the screen session that was made:
+	#screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
 	clear # does this line do anything?
 	#echo ""
 	#echo "Last login:"
@@ -96,26 +99,34 @@ else
 #
 #
 #
+# HERE BEGINS THE MAIN WORK OF THIS SCRIPT
 #
 # Clear old screen sessions (like those that were leftover when the computer was last shutdown)
-	#  Do not do "exec" before this "screen" command since for some reason it won't do anything.
+	#  (Do not do "exec" before this "screen" command since it will cancel the rest of this script)
 screen -wipe > /dev/null 
 #
 #
-echo "Starting GNU Screen from screendoor.sh..."
+echo 'Starting GNU Screen ("main" session) from screendoor.sh...'
 #
-# start main session if not already:
-#
-	if [[ "`screen -ls | grep main`" != *main* ]]; then
-	#  Do not do "exec" before this next"screen" command since for some reason it won't do anything.
+# start main session if not already started:
+#(Do not do "exec" before this next"screen" command since for some reason it won't do anything.)
+	if [[ "`screen -ls | grep main`" != *main* ]]; then    #if there is no screen session named "main", then...
 	#
 	# Setup main screen session with "Cornerstone" window
 	# We don't want the "Cornerstone" window to be a bash shell, since that would trigger .bashrc and .bash_login.  
-	# So, when setting up the initial session, run sleep instead of specifying nothing
+	# So, when setting up the initial session, run sleep (instead of specifying nothing)
 	#(specifying nothing = run bash).
-	#  
-	# Adding in "sleep" between the screen commands to make sure screen has enough time to return, to prevent freeze-ups
-	screen -S main -d -m -t NewWindow sleep 99999999999d && sleep 0.2 && screen -S main -p0 -X title Cornerstone && sleep 0.2 && screen -S main -p0 -X eval 'stuff "This a read-only window in order to hold open this main screen session. \015"' && sleep 0.2 && screen -S main -X multiuser on && sleep 0.2 && screen -S main -X aclchg \* -w 0
+	# 
+	#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
+	#
+	#  Start session "main."  From screen man page: Start screen in "detached" mode. This creates a new session but doesn't  attach  to  it.  This  is  useful for  system startup scripts:
+	screen -S main -d -m -t Cornerstone sleep 99999999999d && \
+	# Give a message using stuff (015 = newline?):
+	sleep 0.2 && screen -S main -p0 -X eval 'stuff "This a read-only window in order to hold open this main screen session. \015"'&& \
+	# Set the session as "multiuser"
+	sleep 0.2 && screen -S main -X multiuser on && \
+	# Make this window read-only
+	sleep 0.2 && screen -S main -X aclchg \* -w 0
 	fi
 #
 #
@@ -128,11 +139,24 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 #
 # Use "-n" on the "echo" because you will be reading this file later in the command to name a screen window, and you don't want to try to name a window based on two lines instead of one.
 #
-# ADDING IN SLEEP COMMANDS TO GIVE SCREEN A CHANCE TO CATCH UP WITHOUT FREEZING
-echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && sleep 0.2 && screen -S main -X prev && sleep 0.2 && screen -S main -x -p "`cat ~/screen.uniqueID.txt`" && clear && exit
-# Above line does this: put the date in a file, create a new screen window with a name based on the date in the file, creating the new window pushes all the instances of screen to the next window so bring them all back to the previous, then connect to the new screen window we just made.
 #
-# Below this is all OLD:
+#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together.
+	# dump the date/time to a file:
+	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
+	# Use "-X" to send a command and then immediately return.  The command is: create a new window on "main" session named [content from file]:
+	screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && \
+	# sleep to make sure everything catches up:
+	sleep 0.2 && \
+	# Creating the new window caused all the other screens to move ahead one, so move them all back:
+	screen -S main -X prev && \
+	# Sleep to make sure everything catches up:
+	sleep 0.2 && \
+	# Use "-x" to attached to the window named [content from file]:
+	screen -S main -x -p "`cat ~/screen.uniqueID.txt`" && \
+	exit
+# Above line does this: put the date in a file, create a new screen window with a name based on the date in the file, creating the new window pushes all the instances of screen to the next window so bring them all back to the previous, then connect to the new screen window we just made.
+#	The above command is held up at connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& clear && exit" comes in, saying clear the screen and exit out of screendoor
+#
 #
 # PROBLEM/WORKAROUND: the problem with running screen plainly that
 # 	when you then run "startx"  you are
