@@ -71,6 +71,7 @@ then
 		# in which case we need to rename it here:
    screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
 	clear # does this line do anything?
+	echo 'Starting GNU Screen new window...'
 	# Can do this? rm ~/screen.xDISPLAY.txt
 	# Try it, then run xMing, and if it works, then do the rm line
 	#
@@ -94,7 +95,8 @@ then
 	export MAIL
 	#
 	echo ""
-	cat /etc/motd
+	# Display the Message of the Day by echo'ing the result of evaluating the command to "cat" /etc/motd
+	echo "MOTD: `cat /etc/motd`"
 	echo ""
 	echo "Your current mail..."
 	mail -H
@@ -134,7 +136,7 @@ screen -wipe > /dev/null
 		# This means "NewTitle" will be the default for all newly created windows.
 		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to name it that way
 			# immediately because then when we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" 
-	screen -S main -d -m -t NewTitle sleep 99999999999d && \
+	screen -S main -d -m -t NewWindow sleep 99999999999d && \
 	# Rename the window title...	
 	screen -S main -p0 -X title Cornerstone && \
 	# Give a message using stuff (015 = newline?):
@@ -158,9 +160,7 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 #
 #  Big multi-line command, using "\" to do multi-line and "&&" to string commands together.
 	# dump the date/time to a file, will be used to name the screen window.
-	#echo "Starting GNU Screen new window."
 	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
-	echo 'Starting GNU Screen new window...'
 	# Use "-X" to send a command and then immediately return.  The command is: create a new window on "main" session named [content from file]:
 	screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && \
 	# sleep to make sure everything catches up:
