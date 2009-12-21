@@ -1,4 +1,4 @@
-SCREENDOOR
+WELCOME TO SCREENDOOR
 
 Website:  http://tech.thedesignhut.net/gnu-screen
 
@@ -31,44 +31,32 @@ It is so nice to be able to login at my computer (directly, or over SSH, or open
         This also lets you disconnect from your SSH (perhaps using Putty) connection and the program remains running.
 
 
-My code is not formatted the best.   I have a fair amount of comments along the way in each file, detailing the screen-related issues for dealing with logins that happen in situations like SCP and x-ming, and if x-windows is running from within screen and then you open a xterm w/in that, etc.
+The code contains a fair amount of comments along the way in each file, detailing the screen-related issues for dealing with logins that happen in situations like SCP and xMing, and if x-windows is running from within screen and then you open a xterm w/in that, etc.
 
-Took me lots of trial and error, am open to any input for improving those files.   They do work great currently.
-
-The main screen session is "Cornerstone" (with one blank, non-writable window, has a message giving its purpose, and is held open with a long "sleep" command) and windows are titled by date & time.   In case two logins happen during the same minute or second, milliseconds is also used in the window name,  in order to make sure each window name is unique.
-
+When using Screendoor, the main Screen session is named "main," created upon the first login/shell.  New windows are titled by date & time.  The "main" session contains a window named "Cornerstone" to hold it open (it is a blank, non-writable window, giving a short message, and is held open with a long "sleep" command).
+	In case two logins happen during the same minute or second, milliseconds is also used in the window name,  in order to make sure each window name is unique.
 
 
 
-USE
-Begin using screendoor.sh by adding a line like this to the end of a file like .bash_login and .bashrc
+USING SCREENDOOR
 
-. [path to screendoor]/screendoor.sh
+There are 3 steps:
 
-For example:
-. ~/screendoor.sh
+1) Use the included ".screenrc" file, or merge the (uncommented) lines with your own, pre-existing .screenrc file.
+
+2) Put "screendoor.sh" in your home directory.
+
+3) Add a line like the following to the END of your shell startup file(s)
+
+	. ~/screendoor.sh
+
+
+   For example, if BASH is your default shell, this line goes in BOTH your .bashrc AND your .bash_login files.
+        Or, if using zsh, this line goes at the end of your .zshrc file.
 
 
 
 
 TIPS
 
-Clone this git repo, check it out, and then softlink your .bash_login, .screenrc, etc to the checked-out repo (working directory).
-
-
-
-
-.bash_login is triggered by starting a new:
-
-SSH login   (this is NOT run from w/in screen)
-F1, F2, etc login  (this is NOT run from w/in screen)
-"Ctrl-A c"  (this IS run from w/in screen)
-manually typing "screen" on the command-line (this IS run from w/in screen)
-Using WinSCP (this is NOT run from w/in screen)
-
-
-.bashrc is triggered by:
-
-beginning an xterm window
-creating a new tab in an xterm window
-running "screen -ln bash --noprofile"
+Clone this git repo, check it out, and then softlink your .bash_login (or .zshrc), .screenrc, etc to the checked-out repo (working directory).
