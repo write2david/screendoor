@@ -132,10 +132,9 @@ screen -wipe > /dev/null
 	#
 	#  Start session "main."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
 	echo 'Starting GNU Screen session "main"...'
-	# Create new session anmed "main" with the first window titled "NewTitle"
-		# This means "NewTitle" will be the default for all newly created windows.
-		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to name it that way
-			# immediately because then when we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" 
+	# Create new session anmed "main" with the first window titled "NewWindow"
+		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediate name it that way
+			# because then if we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" (which would be the default)
 	screen -S main -d -m -t NewWindow sleep 99999999999d && \
 	# Rename the window title...	
 	screen -S main -p0 -X title Cornerstone && \
