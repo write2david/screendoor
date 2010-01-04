@@ -19,7 +19,7 @@ git cheat sheet:   http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
 
 GUI Programs:
 gitk
-gitk -all
+gitk --all
 qgit4
 git-gui or git gui
 
