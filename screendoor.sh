@@ -71,7 +71,8 @@ then
 		# in which case we need to rename it here:
    screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
 # We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
-        rm ~/screen.uniqueID.txt > /dev/null
+        rm -f ~/screen.uniqueID.txt
+	# Use "-f" on rm b/c using > /dev/null doesn't work
 	#
 	clear # does this line do anything?
 	echo 'Starting GNU Screen new window...'
