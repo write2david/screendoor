@@ -70,6 +70,9 @@ then
 	# If the new screen window was created with "Ctrl-A c" then it will be named the default (see below) "New Window"
 		# in which case we need to rename it here:
    screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
+# We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
+        rm ~/screen.uniqueID.txt > /dev/null
+	#
 	clear # does this line do anything?
 	echo 'Starting GNU Screen new window...'
 	# Can do this? rm ~/screen.xDISPLAY.txt
@@ -170,12 +173,10 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 	sleep 0.2 && \
 	# Use "-x" to attached to the window named [content from file]:
 	screen -S main -x -p "`cat ~/screen.uniqueID.txt`" && \
-	# We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window
-        rm ~/screen.uniqueID.txt && \
 
 	# Exit the shell that called this script.  Now only the new screen window (and the shell that IT prompted) are running (?)
 	exit
-#	The above command is held up at connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& exit" comes in, saying clear the screen and exit out of screendoor
+#	The above command is held up at the step of connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& exit" comes in, saying clear the screen and exit out of screendoor
 #
 #
 # PROBLEM/WORKAROUND: the problem with running screen plainly that
@@ -189,3 +190,5 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 # "screen" command MUST create a new session (using  "-m"), even if running w/in# a screen session.
 #
 fi
+#seems like sometimes another "exit" is needed:
+exit
