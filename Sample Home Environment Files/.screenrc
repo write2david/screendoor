@@ -23,7 +23,7 @@
 #  More truncation:  %20L>
 #  Set the color and formatting for the current window: %{=b .g}
 #  Show the current window's number and title, with "flags of the window" code: %n%f %t%
-#  As  a special case, "%{-}" restores the attributes and colors that were set before the last change was made (from man page)
+#  As a special case, "%{-}" restores the attributes and colors that were set before the last change was made (from man page)
 #  List the windows that are numbered higher than the current window:  %+Lw
 #  Date and time on the right:  %-020= %D %d %M - %c
 #  caption always "%{= .w}%-Lw%20L>%{=b .c}%n%f %t%{-}%+Lw %-020= %D %d %M - %c"
@@ -33,9 +33,16 @@
 #    (when the time changes while you are doing Ctrl-PgUp, it drops you back down to the bottom)
 #    And WITH the current window in GREEN
 #    Also, remove the "flags of the window" code  (%f)
-  caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
+#  caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
 #
 #
+#
+#
+# Just window number, and not window title:
+# Unfortunately, the i"number-only" option is only shown for *current* window, since previous/subsequent windows are covered by %-Lw and %+Lw, which include the title
+#   So, I asked the GNUscreen-users mailing list if there is an option besides "L" to list previous/subsequent window NUMBERS, or if the feature could be added to Gnu Screen.  Until then, the next line is not a great option.
+#   caption always "%{= .w}%-Lw%20L>%{=b .g}%n{-}%+Lw"
+##
 #
 # Fix Backspace key for when Backspace, instead of deleting to the left, produces these characters:  ^?
 # From: http://www.deadlock.it/200902/fix-gnu-screen-backspace-misinterpretation/
