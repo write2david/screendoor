@@ -70,11 +70,8 @@ then
 	# If the new screen window was created with "Ctrl-A c" then it will be named the default (see below) "New Window"
 		# in which case we need to rename it here:
    screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
-# We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
-        rm -f ~/screen.uniqueID.txt
-	# Use "-f" on rm b/c using > /dev/null doesn't work
 	#
-	clear # does this line do anything?
+	#clear    # does this line do anything?
 	echo 'Starting GNU Screen new window...'
 	# Can do this? rm ~/screen.xDISPLAY.txt
 	# Try it, then run xMing, and if it works, then do the rm line
@@ -123,31 +120,31 @@ screen -wipe > /dev/null
 #
 #
 #
-# start main session if not already started:
+# start main session (named "screendoor") if not already started:
 #(Do not do "exec" before this next"screen" command since for some reason it won't do anything.)
-	if [[ "`screen -ls | grep main`" != *main* ]]; then    #if there is no screen session named "main", then...
+	if [[ "`screen -ls | grep screendoor`" != *screendoor* ]]; then    #if there is no screen session named "screendoor", then...
 	#
-	# Setup main screen session with "Cornerstone" window
+	# Setup main screen session (named "screendoor") with "Cornerstone" window
 	# We don't want the "Cornerstone" window to be a bash shell, since that would trigger .bashrc and .bash_login.  
 	# So, when setting up the initial session, run sleep (instead of specifying nothing)
 	#(specifying nothing = run bash).
 	# 
 	#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
 	#
-	#  Start session "main."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
-	echo 'Starting GNU Screen session "main"...'
-	# Create new session anmed "main" with the first window titled "NewWindow"
+	#  Start session "screendoor."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
+	echo 'Starting GNU Screen session named "screendoor"...'
+	# Create new session named "screendoor" with the first window titled "NewWindow"
 		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediate name it that way
 			# because then if we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" (which would be the default)
-	screen -S main -d -m -t NewWindow sleep 99999999999d && \
+	screen -S screendoor -d -m -t NewWindow sleep 99999999999d && \
 	# Rename the window title...	
-	screen -S main -p0 -X title Cornerstone && \
+	screen -S screendoor -p0 -X title Cornerstone && \
 	# Give a message using stuff (015 = newline?):
-	sleep 0.2 && screen -S main -p0 -X eval 'stuff "This a read-only window in order to hold open this main screen session. \015"'&& \
+	sleep 0.2 && screen -S screendoor -p0 -X eval 'stuff "This a read-only window (titled "Cornerstone") created in order to hold open this central screen session (named "screendoor"). \015"'&& \
 	# Set the session as "multiuser"
-	sleep 0.2 && screen -S main -X multiuser on && \
+	sleep 0.2 && screen -S screendoor -X multiuser on && \
 	# Make this window read-only
-	sleep 0.2 && screen -S main -X aclchg \* -w 0
+	sleep 0.2 && screen -S screendoor -X aclchg \* -w 0
 	fi
 #
 #
@@ -164,17 +161,21 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 #  Big multi-line command, using "\" to do multi-line and "&&" to string commands together.
 	# dump the date/time to a file, will be used to name the screen window.
 	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
-	# Use "-X" to send a command and then immediately return.  The command is: create a new window on "main" session named [content from file]:
-	screen -S main -X screen -t "`cat ~/screen.uniqueID.txt`" && \
+	# Use "-X" to send a command and then immediately return.  The command is: create a new window on central "screendoor" session named [content from file]:
+	screen -S screendoor -X screen -t "`cat ~/screen.uniqueID.txt`" && \
 	# sleep to make sure everything catches up:
 	sleep 0.2 && \
 	# Creating the new window caused all the other screens to move ahead one, so move them all back:
-	screen -S main -X prev && \
+	screen -S screendoor -X prev && \
 	# Sleep to make sure everything catches up:
 	sleep 0.2 && \
 	# Use "-x" to attached to the window named [content from file]:
-	screen -S main -x -p "`cat ~/screen.uniqueID.txt`" && \
-
+	# Remember that though we are attaching here, we are already initiated new window, which itself has called this script and goes through the "Creating new GNU Screen window" section near the top.
+	screen -S screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`" && \
+# We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
+        # We're putting the "rm" command at the last possible place.  Doing so earlier would mean that it would be needed later.  Doing so later means it wouldn't happen until this part returns (which it doesn't yet, see section below about "above command is held up at...").  Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section *attaches* to the new window.
+	        # Use "-f" on rm b/c using > /dev/null doesn't work
+		 
 	# Exit the shell that called this script.  Now only the new screen window (and the shell that IT prompted) are running (?)
 	exit
 #	The above command is held up at the step of connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& exit" comes in, saying clear the screen and exit out of screendoor
