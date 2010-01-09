@@ -1,13 +1,4 @@
-BASIC GITHUB STUFF:
-git add [filename]
-git commit -m '[commit info]'
-git push github master
-
-	[the "master" is optional, it specifies which local branch to push to github]
-
-
-
-EXTRA HELP:
+======EXTRA HELP======
 Git Community Book
 http://cheat.errtheblog.com/s/git/
 man gittutorial
@@ -16,8 +7,7 @@ git cheat sheet:   http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
 
 
 
-
-GUI Programs:
+======GUI PROGRAMS=======
 gitk
 gitk --all
 qgit4
@@ -25,44 +15,37 @@ git-gui or git gui
 
 
 
-BASIC GIT STUFF:
+=====GIT CONFIGURATION======
+
+git config --global user.name "Your Name"
+git config --global user.email write2david@gmail.com
+
+Add color to output:
+	git config --global color.status auto
+	git config --global color.diff auto	
+	git config --global color.branch auto
+	
+
+====TERMINOLOGY====
+
+HEAD = the current tip of the current branch, the last (most recent) commit/revision of the branch.
+	specified in the .git/HEAD file
+	the HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
 
 
-========ORGANIZE THIS SECTION============
-git log -n3
-git log --stat --summary
-
-
-git diff HEAD^..HEAD
-To view the last changes you made
-
-
-Haven't committed yet, but don't want to save the changes? You can throw them away:
-git reset --hard
-
-
-
-Messed up the commit message? This will let you re-enter it:
-git commit --amend
-
-
-
-Forgot something in your last commit? That's easy to fix.
-    git reset --soft HEAD^
-    Add that stuff you forgot:
-    git add forgot.txt these.txt
-    Then write over the last commit:
-    git commit
+Tree-ish
+SHA-1
+Commit = Revision
+	--Links to a parent commit and a tree, each of which is ID'd by its SHA-1
 
 
 
 
-Getting in the habit of creating quality commit messages makes using and collaborating with Git a lot easier. As a general rule, your messages should start with a single line that's no more than about 50 characters and that describes the changeset concisely, followed by a blank line, followed by a more detailed explanation.
+======BASIC GIT COMMANDS======
 
 
-===========ORGANIZE THE ABOVE SECTION============
 
-
+==ADDING==
 
 git add  =  does BOTH adding files to the scope of the project (they are now tracked) AND adding changes to the files to the staging area
 
@@ -76,45 +59,20 @@ git add *  or   git add *.txt  =  Fileglobs (e.g. *.c) can be given to add all m
 git rm --cached  = does not remove the file from the working dir, but removes them from scope of the project (not tracked anymore) and they will be deleted from the git repo upon next commit.  Commits absence-of-file from the project.   git-show will display that it will be deleted from repo upon next commmit.   Is not used for unstaging a file, but rather it stages a file-deletion commit.
 
 
-git rm   =  removes the file in the working dir, removes them from the scope of the project (they are untracked -- well, actually they can't be tracked because they don't exist anymore), and they will be deleted from the repo upon the next commit.
-
 git add -u  = Tell git to remove files that are deleted in file system but not yet removed from index (instead of git rm on all of them)
 
 
-git log -- show complete log of all past commits, giving the commit SHA-1,
-author, date, and summary line
+==REMOVING==
 
-git log -p  -- same as the above, but include the diff 
+git rm   =  removes the file in the working dir, removes them from the scope of the project (they are untracked -- well, actually they can't be tracked because they don't exist anymore), and they will be deleted from the repo upon the next commit.
 
 
-git log [filename] OR git log -p [filename]  --  do show the history/log of
-commits that include the filename given
-
-git whatchanged -p [filename] 
+==STATUS==
 
 git status / show files added to the staging area, files with changes, and untracked files
 
 
-
-HEAD = the current tip of the current branch, the last (most recent) commit of the branch.
-	specified in the .git/HEAD file
-	the HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
-
-
-git show HEAD = show the tip of the current branch, including the SHA-1 of its commit (which is the same commit as listed in the .git/HEAD file mentioned above)
-
-git show HEAD^ = show the parent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
-
-git show HEAD^^ = show the grandparent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
-
-git show HEAD~4 = show the great-great-grandparent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
-
-git show [SHA-1]  =  show info on the commit specified by the SHA-1
-
-
-git show [branch]  = show tip of the specified branch
-
-
+==COMMIT==
 
 git commit -a
   commit all files modified since your last commit
@@ -133,6 +91,9 @@ merge and git revert, and with the norms of other major opensource projects.
 
 > Commits should be something that someone might want to patch or revert in its entirety, and never piecewise. If it could be useful in pieces, make separate commits. This will result in short, clear, and concise commit messages.
 
+Getting in the habit of creating quality commit messages makes using and collaborating with Git a lot easier. As a general rule, your messages should start with a single line that's no more than about 50 characters and that describes the changeset concisely, followed by a blank line, followed by a more detailed explanation.
+
+
 
 git commit -v   --   Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template.
 
@@ -149,6 +110,54 @@ git commit --amend <file1> <file2> ...
 
 
 
+==LOG==
+
+git log -- show complete log of all past commits, giving the commit SHA-1,
+author, date, and summary line
+
+git log -p  -- same as the above, but include the diff 
+
+
+git log [filename] OR git log -p [filename]  --  do show the history/log of
+commits that include the filename given
+
+git log -n3
+git log --stat --summary
+
+
+git whatchanged -p [filename] 
+
+
+==SHOW==
+
+git show HEAD = show the tip of the current branch, including the SHA-1 of its commit (which is the same commit as listed in the .git/HEAD file mentioned above)
+
+git show HEAD^ = show the parent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
+
+git show HEAD^^ = show the grandparent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
+
+git show HEAD~4 = show the great-great-grandparent of HEAD   (in zsh, you may need to use a backslash to escape the carrot)
+
+git show [SHA-1]  =  show info on the commit specified by the SHA-1
+
+git show [branch]  = show tip of the specified branch
+
+
+You can see the contents of a file, the listing of a directory or a commit with  [rev = SHA-1]:
+
+git show rev:path/to/file
+git show rev:path/to/directory
+git show rev
+
+
+Aside from merging, sometimes you want to just pick one commit from a different branch. To apply the changes in revision rev and commit them to the current branch use:
+
+git cherry-pick rev
+
+
+==DIFF==
+
+
 git diff   /     show a diff of the changes made in working directory that are not staged for commit  (the dif b/t working directory and index)
 	git diff -- <filename>    /    to diff one file
 
@@ -156,6 +165,8 @@ git diff --cached    /   to show a diff between staging area and HEAD  (differen
 
 git diff HEAD  /   shows changes in working directory since last commit  (what would be commit if you run "git commit -a")
 
+git diff HEAD^..HEAD
+	To view the last changes you made
 
 
 git whatchanged
@@ -228,6 +239,22 @@ git reset --hard HEAD^  = reset both repo branch and current working directory t
 git reset --hard HEAD~3  = The last three commits (HEAD, HEAD^, and HEAD~2) were bad and            you do not want to ever see them again. Do not do this if you have already given these commits to somebody else. 
 
 
+Haven't committed yet, but don't want to save the changes? You can throw them away:
+git reset --hard
+
+
+Messed up the commit message? This will let you re-enter it:
+git commit --amend
+
+Forgot something in your last commit? That's easy to fix.
+    git reset --soft HEAD^
+    Add that stuff you forgot:
+    git add forgot.txt these.txt
+    Then write over the last commit:
+    git commit
+
+
+
 git pull = does both "fetch" and "merge"
 
 
@@ -272,3 +299,140 @@ Example steps:
   git commit -m 'first commit'
   git remote add origin git@github.com:write2david/screendoor.git
   git push origin master
+
+
+
+
+
+
+# Add to the index and commit cake.txt in one go.
+git commit cake.txt
+
+
+
+
+Rebasing  //  Think of it as:
+
+    * Find all your (committed) changes, since you branched
+    * Reset your branch, so that it's an exact copy of the current master
+    * Re-apply all your changes again
+
+
+Or put another way:
+
+    * Suck in all (committed) changes to master made since I branched
+
+
+git checkout branch_name
+git rebase master
+
+# If conflicts occur, and sooner or later they will,
+# manually edit the conflicting files
+git add file(s)
+git rebase --continue
+
+
+
+
+Reworking commit history
+
+You want:
+
+    * Two different commits to be combined into a single commit
+    * Remove a commit entirely from the history
+    * Change the commit message
+    * Change the order that commits appear in the history
+    * Split one big commit into multiple smaller commits
+
+git rebase --interactive COMMIT_ID
+
+COMMIT_ID should be the one BEFORE you want to fiddle with.
+
+
+
+
+To "unstage" a file, aka remove it from the index:
+git reset HEAD cake.txt
+
+
+
+
+To combine revision 3 and 4 into a single revision, you can use git rebase. If you want to remove the changes in revision 3, you need to use the edit command in the interactive rebase mode. If you want to combine the changes into a single revision, use squash.
+
+
+
+between a particular version and 2 versions ago:
+
+$ git diff SHA1_HASH "master~2"
+
+
+
+
+git count-objects
+
+
+
+
+git ls-files --deleted
+git ls-files -d
+    only shows files that are in STAGING but deleted from WORKING
+
+
+
+
+
+Pull a file back that was deleted:
+
+$ ls -l [filename]
+ls: slosh.tac: No such file or directory
+# oh no!
+
+$ git log -n 1 -- [filename]
+commit 8d4a1f1a94e4aa37c1cb9d329a140d08eec1b587
+
+$ git checkout 8d4a1f^ [filename]
+
+Note that this does not actually put the file back in revision control. You can then add it or just inspect it or whatever from that point.
+
+
+
+
+
+If you did actually want to remove a file from history, git filter-branch is the hacksaw you’re looking for. Definitely read up on its manpage before using it, since it will literally rewrite your project’s commits. This actually is a great tool for some actions, and can do all sorts of stuff like totally removing an author’s commits to moving the project root folder around. The command to remove a file from all revisions is:
+
+git filter-branch --index-filter 'git rm --cached <file>' HEAD
+
+This action can definitely be useful when you need to blow out sensitive or confidential information that may have been placed in your repository.
+
+
+
+
+---> Find all deleted files:
+
+git log --summary
+then search for "delete mode"
+
+
+---> Restore the deleted file (restore from the parent tree of the commit that deleted the file):
+git checkout [the SHA-1 of the commit the deleted the file]~1 [filename]
+
+           --if the file has spaces, either use backslash to escape them or put the file in quotes
+           --EITHER include the path to the file OR if you are in the directory where the file used to live then you don't need to  include the path (just the filename)
+           
+           
+           
+
+When bandwidth is an issue, people can download the latest version of your repository without downloading all the history, using "shallow checkouts."  Note that such a copy has limitations, see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html , option --depth for details.
+
+Example:
+
+$ git clone --depth 1 git://git.sv.gnu.org/gnulib.git
+
+
+
+git fsck
+running without "--full" is usually cheap and assures the repository health reasonably well.
+
+
+git gc
+repacks the local repository and performs other housekeeping tasks
