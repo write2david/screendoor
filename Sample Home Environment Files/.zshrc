@@ -123,6 +123,8 @@ bindkey '\e[4~' end-of-line
 # Ctrl-R for reverse history search
 bindkey '^R' history-incremental-search-backward
 
+# Ctrl-T for forward history search
+bindkey '^T' history-incremental-search-forward
 
 # -----------------------------------------------
 # Prompt Setup
