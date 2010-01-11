@@ -140,7 +140,7 @@ screen -wipe > /dev/null
 	# Rename the window title...	
 	screen -S screendoor -p0 -X title Cornerstone && \
 	# Give a message using stuff (015 = newline?):
-	sleep 0.2 && screen -S screendoor -p0 -X eval 'stuff "This a read-only window (titled "Cornerstone") created in order to hold open this central screen session (named "screendoor"). \015"'&& \
+	sleep 0.2 && screen -S screendoor -p0 -X eval 'stuff "This a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"'&& \
 	# Set the session as "multiuser"
 	sleep 0.2 && screen -S screendoor -X multiuser on && \
 	# Make this window read-only
