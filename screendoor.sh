@@ -70,12 +70,10 @@ then
 	# If the new screen window was created with "Ctrl-A c" then it will be named the default (see below) "New Window"
 		# in which case we need to rename it here:
    screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
-	#
-	#clear    # does this line do anything?
-	echo 'Starting GNU Screen new window...'
-	# Can do this? rm ~/screen.xDISPLAY.txt
-	# Try it, then run xMing, and if it works, then do the rm line
-	#
+	
+	echo 'Starting a new window in GNU Screen...'
+	echo
+
 	#echo "Last login:"
 	# What this next line does: grab the first three logins (most recent)
 	# produced by the "last" command. The first one is the current one,
@@ -91,22 +89,38 @@ then
 	#echo 
 	#echo "Current/active logins:"
 	#last | grep still | sed 's/still\ logged\ in//g'
-	#echo ""
+	#echo 
+	
 	MAIL=$HOME/.maildir
 	export MAIL
-	#
-	echo ""
+	
+	
 	# Display the Message of the Day by echo'ing the result of evaluating the command to "cat" /etc/motd
 	echo "MOTD: `cat /etc/motd`"
-	echo ""
+	echo 
+	
 	echo "Your current mail..."
 	mail -H
-	#echo "Message from screendoor.sh: You are w/in GNU Screen.   (Shift-PgUp for SSH errors)"
+	echo
+
+	# If the ~/screen.xDISPLAY.txt exists, use it.
+		# It may not exist if this file is called w/"Ctrl-A c"
 	# See note below, which mentions these lines.
-	export DISPLAY=`cat ~/screen.xDISPLAY.txt`
-	#echo "      (Your x-windows \$DISPLAY now is...  $DISPLAY)"
-	# Ended up commenting out the next line b/c in an XTERM, when using "Ctrl-A c" to create screen windows there was no ~/screen.xDISPLAY.txt files so the DISPLAY variable was not set in that session, not good for starting Xwindows applications.  So, no removal of the file, it is overwritten whenever needed, and new windows can just use whatever the last variable was set to in this file.
+	if [ -f ~/screen.xDISPLAY.txt ]
+		then
+		export DISPLAY=`cat ~/screen.xDISPLAY.txt`
+		fi
+	#echo "(Your x-windows \$DISPLAY now is...  $DISPLAY)"
+		
+	
+	# A test: Try uncommenting next line, and then run Xming and then...
+		# See if xMing runs Terminal/Firefox/Gramps.
+		# Try using xMing to run Terminal, open a new tab in Terminal and run mousepad
+		# Do "Ctrl-A c" in Terminal and run mousepad.
+		# If all is good during this time the next line is uncommented, then leave it uncommented.
 	#rm -f ~/screen.xDISPLAY.txt
+
+	# Need to work to have zsh be default login shell and then remove next line.
 	zsh && exit
 else
 #
@@ -139,8 +153,11 @@ screen -wipe > /dev/null
 	screen -S screendoor -d -m -t NewWindow sleep 99999999999d && \
 	# Rename the window title...	
 	screen -S screendoor -p0 -X title Cornerstone && \
-	# Give a message using stuff (015 = newline?):
-	sleep 0.2 && screen -S screendoor -p0 -X eval 'stuff "This a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"'&& \
+	# Write s message on the Cornerstone window using the "stuff" screen command
+	# \015 is octal ASCII code for carriage return.
+		# Need to use 'eval' so that the text \015 isn't printed literally
+		# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
+	sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"' && \
 	# Set the session as "multiuser"
 	sleep 0.2 && screen -S screendoor -X multiuser on && \
 	# Make this window read-only
