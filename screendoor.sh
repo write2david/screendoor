@@ -1,26 +1,32 @@
 #!/bin/bash
-#
-#
+
+
 # Latest version is available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
 #
 # Git: http://github.com/write2david/screendoor
 #
 # Why? http://tech.thedesignhut.net/gnu-screen
-#
-#
-#
+
+
+
 # Great Bash help / howto page:
 # http://www.panix.com/~elflord/unix/bash-tute.html
-#
+
+
+
+
 # NOTE:
 # This file gets run every time a shell starts (which includes every time screen starts)
 # So, if screen is already running (that is, if the parent process of this script is "screen" -- the line above tests this), then we just connect to the already-created window
 # Login -> shell startup script -> run screendoor (setup Cornerstone and new window) -> [start screen] -> prompts new shell -> shell startup script (which prompts running this file, now going down to this section) -> screendoor connects to new window
-
+#
 # When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
+
+
+
+# FIRST, TEST FOR INTERACTIVE SHELL
+#      ...AND EXIT IF NOT INTERACTIVE.
 #
-#
-# First, test for an interactive shell, and exit if not interactive.
 #    -- No need for screen if the user won't be interacting with the shell.
 #    -- This also prevents screen from running when it would confuse another program (like scp) that doesn't use an interactive shell.
 #    -- For more info, see:
@@ -32,13 +38,67 @@
          return   # use 'return', not 'exit', since we just want to prevent execution of further code in this script, not exit the non-interactive shell and thus mess up the program that needed it / spawned it 
          fi
 
+
+
+# SECOND, CHECK FOR DUMB TERMINAL LOGIN
+#      ...AND EXIT IF NOT INTERACTIVE.
+#
 # This checks to see if something like WinSCP is logging in.  WinSCP definitely doesn't like it when SCREEN runs while it's logging in.
 case ${TERM} in
         dumb)
 	return     ;;
 	esac
+
+
+
+
+# THIRD, CLEAR OUT OLD, DEAD SCREEN SESSIONS
+#      ...like those that were leftover when the computer was unexpectantly shutdown.
+screen -wipe > /dev/null 
+
+
+
+# FOURTH, START MAIN SCREEN SESSION (NAMED "screendoor")
+#        ...if not already started.
 #
-#
+	if [[ "`screen -ls | grep screendoor`" != *screendoor* ]]; then
+		# That is, if there is no screen session named "screendoor", then...
+	#
+	#
+	# Setup main screen session (named "screendoor") with "Cornerstone" window
+	# We don't want the "Cornerstone" window to be a bash shell, since that would trigger .bashrc and .bash_login.  
+	# So, when setting up the initial session, run sleep (instead of specifying nothing)
+	#(specifying nothing = run bash).
+	# 
+	#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
+	#
+	#  Start session "screendoor."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
+	echo 'Starting GNU Screen session named "screendoor"...'
+	# Create new session named "screendoor" with the first window titled "NewWindow"
+		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediate name it that way
+			# because then if we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" (which would be the default)
+	screen -S screendoor -d -m -t NewWindow sleep 99999999999d && \
+	# Rename the window title...	
+	screen -S screendoor -p0 -X title Cornerstone && \
+	# Write s message on the Cornerstone window using the "stuff" screen command
+	# \015 is octal ASCII code for carriage return.
+		# Need to use 'eval' so that the text \015 isn't printed literally
+		# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
+	sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"' && \
+	# Set the session as "multiuser"
+	sleep 0.2 && screen -S screendoor -X multiuser on && \
+	# Make this window read-only
+	sleep 0.2 && screen -S screendoor -X aclchg \* -w 0
+	fi
+
+
+
+# FIFTH, SETUP AN IF/ELSE SCENARIO...
+#	IF this script was called by GNU Screen
+#	ELSE this scrip was not called by GNU Screen
+
+
+
 # We want to start screen on all shell prompts, not just all logins.
 # This way we can connect to even xterm tabs in XFCE.
 # But if we start screen on all  prompts, then we'll run into this problem:
@@ -57,25 +117,38 @@ case ${TERM} in
 #       Screen again.
 # Inspired by:
 #       http://forums.whirlpool.net.au/forum-replies-archive.cfm/324661.html
-#
-#
+
+
+
+
+
 #  This next line will check to see if parent process equals (see the colon) "SCREEN"
 #  If it does, that means that screen has called this file via the shell login files,
 #		or via "Ctrl-A c"
 #
+
+
+
 if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
+
+
+
 then
+
+
 	# If the new screen window was created with a new SSH/login screen or new xterm tab, then it will have created
-		# a window that is already properly-named (bottom part of file does this, we have cycled through it already).
-	# If the new screen window was created with "Ctrl-A c" then it will be named the default (see below) "New Window"
-		# in which case we need to rename it here:
-   screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
+	# a window that is already properly-named (bottom part of file does this, we have cycled through it already).
+	# If the new screen window was created with "Ctrl-A c" then it will be named
+	# the default (see below) "New Window" in which case we need to rename it here:
+
+	screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
 	
+
 	echo 'Starting a new window in GNU Screen...'
 	echo
 
-	#echo "Last login:"
-	# What this next line does: grab the first three logins (most recent)
+
+	# What this optional section does: grab the first three logins (most recent)
 	# produced by the "last" command. The first one is the current one,
 	# the second one is also the current one (since logging in starts 
 	# bash (next-most-recent login entry) and bash starts screen 
@@ -85,12 +158,17 @@ then
 	# "last" command. So, we need to get rid of the lines that say
 	# "reboot" or else the first time you login after a reboot it may
 	# list "reboot" as the "Last login"
+	#
+	#echo "Last login:"
 	#last | grep -v reboot | head -n 3 | tail -n 1	
-	#echo 
+	#echo
+
+
 	#echo "Current/active logins:"
 	#last | grep still | sed 's/still\ logged\ in//g'
 	#echo 
 	
+
 	MAIL=$HOME/.maildir
 	export MAIL
 	
@@ -122,70 +200,42 @@ then
 
 	# Need to work to have zsh be default login shell and then remove next line.
 	zsh && exit
+
+
+
+
 else
-#
-#
-#
-# HERE BEGINS THE MAIN WORK OF THIS SCRIPT
-#
-# Clear old screen sessions (like those that were leftover when the computer was last shutdown)
-	#  (Do not do "exec" before this "screen" command since it will cancel the rest of this script)
-screen -wipe > /dev/null 
-#
-#
-#
-# start main session (named "screendoor") if not already started:
-#(Do not do "exec" before this next"screen" command since for some reason it won't do anything.)
-	if [[ "`screen -ls | grep screendoor`" != *screendoor* ]]; then    #if there is no screen session named "screendoor", then...
-	#
-	# Setup main screen session (named "screendoor") with "Cornerstone" window
-	# We don't want the "Cornerstone" window to be a bash shell, since that would trigger .bashrc and .bash_login.  
-	# So, when setting up the initial session, run sleep (instead of specifying nothing)
-	#(specifying nothing = run bash).
-	# 
-	#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
-	#
-	#  Start session "screendoor."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
-	echo 'Starting GNU Screen session named "screendoor"...'
-	# Create new session named "screendoor" with the first window titled "NewWindow"
-		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediate name it that way
-			# because then if we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" (which would be the default)
-	screen -S screendoor -d -m -t NewWindow sleep 99999999999d && \
-	# Rename the window title...	
-	screen -S screendoor -p0 -X title Cornerstone && \
-	# Write s message on the Cornerstone window using the "stuff" screen command
-	# \015 is octal ASCII code for carriage return.
-		# Need to use 'eval' so that the text \015 isn't printed literally
-		# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
-	sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"' && \
-	# Set the session as "multiuser"
-	sleep 0.2 && screen -S screendoor -X multiuser on && \
-	# Make this window read-only
-	sleep 0.2 && screen -S screendoor -X aclchg \* -w 0
-	fi
-#
-#
-#
-#
+
+
+# NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
+
+
 # Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having the $DISPLAY property set (it's in the initial bash shell, but when that bash shell connects to a new screen window, the  shell in that new screen window doesn't have the $DISPLAY variable set).  So, while we are still in the initial  shell, we will write the $DISPLAY variable to a file, and then read it from within the new window's shell.
 # Note that the reason this exists is that $DISPLAY is automatically set when you login over SSH with X-forwarding enabled.
-echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
-#
-#
 # Use "-n" on the "echo" because you will be reading this file later in the command to name a screen window, and you don't want to try to name a window based on two lines instead of one.
 #
-#
-#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together.
+echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
+
+
+
+
+#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together...
+	#
 	# dump the date/time to a file, will be used to name the screen window.
 	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
+	#
 	# Use "-X" to send a command and then immediately return.  The command is: create a new window on central "screendoor" session named [content from file]:
 	screen -S screendoor -X screen -t "`cat ~/screen.uniqueID.txt`" && \
+	#
 	# sleep to make sure everything catches up:
 	sleep 0.2 && \
+	#
 	# Creating the new window caused all the other screens to move ahead one, so move them all back:
 	screen -S screendoor -X prev && \
+	#
 	# Sleep to make sure everything catches up:
 	sleep 0.2 && \
+	#
 	# Use "-x" to attached to the window named [content from file]:
 	# Remember that though we are attaching here, we are already initiated new window, which itself has called this script and goes through the "Creating new GNU Screen window" section near the top.
 	screen -S screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`" && \
@@ -196,8 +246,20 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 	# Exit the shell that called this script.  Now only the new screen window (and the shell that IT prompted) are running (?)
 	exit
 #	The above command is held up at the step of connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& exit" comes in, saying clear the screen and exit out of screendoor
-#
-#
+
+
+fi
+
+
+
+#seems like sometimes another "exit" is needed:
+exit
+
+
+
+
+
+
 # PROBLEM/WORKAROUND: the problem with running screen plainly that
 # 	when you then run "startx"  you are
 # running it w/in screen, and so then when you run "xterm" in X-windows it
@@ -207,7 +269,3 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 # a new session, it just creates a new window); all you can do is
 # specify a screen session to connect to. To get around this, specify that the
 # "screen" command MUST create a new session (using  "-m"), even if running w/in# a screen session.
-#
-fi
-#seems like sometimes another "exit" is needed:
-exit
