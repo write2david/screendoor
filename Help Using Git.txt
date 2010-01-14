@@ -413,12 +413,18 @@ git log --summary
 then search for "delete mode"
 
 
----> Restore the deleted file (restore from the parent tree of the commit that deleted the file):
+---> Restore the deleted file (that is, restore the file from the parent tree
+of the commit that deleted the file) using this line:
 git checkout [the SHA-1 of the commit the deleted the file]~1 [filename]
 
            --if the file has spaces, either use backslash to escape them or put the file in quotes
            --EITHER include the path to the file OR if you are in the directory where the file used to live then you don't need to  include the path (just the filename)
-           
+
+---> Completely remove the DELETED file from the repository history (useful
+if accidentally committed a file that never was needed, or if you committed
+large binary files that are no longer needed, or if committed something now
+considered confidential, etc.)
+	[not sure how to do it]
            
            
 
