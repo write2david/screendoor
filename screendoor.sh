@@ -135,13 +135,14 @@ if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 then
 
 
-	# If the new screen window was created with a new SSH/login screen or new xterm tab, then it will have created
-	# a window that is already named.
+	# If the new screen window was created with a new SSH/login screen or new xterm tab,
+		# then it will have created a window that is already named.
 	# But if the new screen window was created with "Ctrl-A c" then it will be named
-	# the default "NewWindow" in which case we need to rename it here:
+		# the default "NewWindow".
+	# Either way, rename it to the date and time.  We don't need the milliseconds anymore
+		# since we don't need an absolutely unique window name.
 
-	screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
-	
+	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
 
 	echo 'Starting a new window in GNU Screen...'
 	echo
@@ -157,15 +158,9 @@ then
 	# "last" command. So, we need to get rid of the lines that say
 	# "reboot" or else the first time you login after a reboot it may
 	# list "reboot" as the "Last login"
-	#
-	#echo "Last login:"
-	#last | grep -v reboot | head -n 3 | tail -n 1	
-	#echo
 
-
-	#echo "Current/active logins:"
-	#last | grep still | sed 's/still\ logged\ in//g'
-	#echo 
+	#echo "Last login:"  &&  last | grep -v reboot | head -n 3 | tail -n 1  &&  echo
+	#echo "Current/active logins:"  &&  last | grep still | sed 's/still\ logged\ in//g'  &&  echo 
 	
 
 	MAIL=$HOME/.maildir
