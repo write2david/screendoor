@@ -111,8 +111,8 @@ screen -wipe > /dev/null
 # 
 # This next line finds out if the command (-o command) that initiated
 #       the current bash session (-p $PPID) was "screen."   If it IS screen,
-#       then let the user know screen is running.  If it's not, then start
-#       screen; screen will then reload this file, which will determine that
+#       then name the window and dump to a prompt.  If it's not, then start
+#       screen; screen will then spawn a shell which will call this file again, which will determine that
 #       screen IS now the command that started bash, and so it won't load
 #       Screen again.
 # Inspired by:
@@ -122,10 +122,9 @@ screen -wipe > /dev/null
 
 
 
-#  This next line will check to see if parent process equals (see the colon) "SCREEN"
+#  This next line will check to see if parent process equals (note the colon) "SCREEN"
 #  If it does, that means that screen has called this file via the shell login files,
-#		or via "Ctrl-A c"
-#
+#		or directly by screen via "Ctrl-A c"
 
 
 
@@ -137,9 +136,9 @@ then
 
 
 	# If the new screen window was created with a new SSH/login screen or new xterm tab, then it will have created
-	# a window that is already properly-named (bottom part of file does this, we have cycled through it already).
-	# If the new screen window was created with "Ctrl-A c" then it will be named
-	# the default (see below) "New Window" in which case we need to rename it here:
+	# a window that is already named.
+	# But if the new screen window was created with "Ctrl-A c" then it will be named
+	# the default "NewWindow" in which case we need to rename it here:
 
 	screen -X at NewWindow title "`date +%m/%d\ @\ %I:%M%p\ \ \ \ \ \(%N\)`"
 	
@@ -242,7 +241,7 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 	# Use "-x" to attached to the window named [content from file]:
 	# Remember that though we are attaching here, we are already initiated new window, which itself has called this script and goes through the "Creating new GNU Screen window" section near the top.
 	# Now we actually connect to the new window.  We can add "exec" so that this bash script dies and we are just left with the new window.
-	exec screen -S screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`" && \
+	exec screen -S screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`"
 # We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
         # We're putting the "rm" command at the last possible place.  Doing so earlier would mean that it would be needed later.  Doing so later means it wouldn't happen until this part returns (which it doesn't yet, see section below about "above command is held up at...").  Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section *attaches* to the new window.
 	        # Use "-f" on rm b/c using > /dev/null doesn't work
