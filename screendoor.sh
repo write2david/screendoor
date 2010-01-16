@@ -241,16 +241,12 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 	#
 	# Use "-x" to attached to the window named [content from file]:
 	# Remember that though we are attaching here, we are already initiated new window, which itself has called this script and goes through the "Creating new GNU Screen window" section near the top.
-	screen -S screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`" && \
+	# Now we actually connect to the new window.  We can add "exec" so that this bash script dies and we are just left with the new window.
+	exec screen -S screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`" && \
 # We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
         # We're putting the "rm" command at the last possible place.  Doing so earlier would mean that it would be needed later.  Doing so later means it wouldn't happen until this part returns (which it doesn't yet, see section below about "above command is held up at...").  Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section *attaches* to the new window.
 	        # Use "-f" on rm b/c using > /dev/null doesn't work
 		 
-	# Exit the shell that called this script.  Now only the new screen window (and the shell that IT prompted) are running (?)
-	exit
-#	The above command is held up at the step of connecting to the new window (which creates a new shell).  When it finishes (user types "exit") then the "&& exit" comes in, saying clear the screen and exit out of screendoor
-
-
 fi
 
 
