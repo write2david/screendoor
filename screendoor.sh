@@ -167,7 +167,7 @@ then
 	export MAIL
 	
 	
-	# Display the Message of the Day by echo'ing the result of evaluating the command to "cat" /etc/motd
+	# Display the Message of the Day by echoing the content of /etc/motd
 	echo "MOTD: `cat /etc/motd`"
 	echo 
 	
@@ -177,12 +177,12 @@ then
 
 	# If the ~/screen.xDISPLAY.txt exists, use it.
 		# It may not exist if this file is called w/"Ctrl-A c"
-	# See note below, which mentions these lines.
+		# See note below, which explains the creation of ~/screen.xDISPLAY.txt file. 
 	if [ -f ~/screen.xDISPLAY.txt ]
 		then
 		export DISPLAY=`cat ~/screen.xDISPLAY.txt`
+		#echo "(Your X-windows \$DISPLAY variable now is...  $DISPLAY)"
 		fi
-	#echo "(Your x-windows \$DISPLAY now is...  $DISPLAY)"
 		
 	
 	# A test: Try uncommenting next line, and then run Xming and then...
@@ -207,10 +207,14 @@ else
 # NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
 
 
-# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having the $DISPLAY property set (it's in the initial bash shell, but when that bash shell connects to a new screen window, the  shell in that new screen window doesn't have the $DISPLAY variable set).  So, while we are still in the initial  shell, we will write the $DISPLAY variable to a file, and then read it from within the new window's shell.
-# Note that the reason this exists is that $DISPLAY is automatically set when you login over SSH with X-forwarding enabled.
-# Use "-n" on the "echo" because you will be reading this file later in the command to name a screen window, and you don't want to try to name a window based on two lines instead of one.
-#
+# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
+# the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
+# bash shell, but when that bash shell creates/connects to a new screen window,
+# the shell in that new screen window doesn't have the $DISPLAY variable set).
+# So, while we are still in the initial  shell, we will write the $DISPLAY variable to a file, and
+# then read it from within the new window's shell.
+# Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
+
 echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 
