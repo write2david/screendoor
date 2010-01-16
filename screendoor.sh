@@ -168,12 +168,12 @@ then
 	
 	
 	# Display the Message of the Day by echoing the content of /etc/motd
-	echo "MOTD: `cat /etc/motd`"
-	echo 
+	echo "MOTD: `cat /etc/motd`"  &&  echo 
+
 	
-	echo "Your current mail..."
-	mail -H
-	echo
+	# Display mail headers
+	echo "Your current mail..."  &&  mail -H  &&  echo
+
 
 	# If the ~/screen.xDISPLAY.txt exists, use it.
 		# It may not exist if this file is called w/"Ctrl-A c"
@@ -198,7 +198,13 @@ then
 	# Need to add test for default login shell, for now we just assume zsh:
 	exec zsh
 
+	# Work on detecting user's default login shell, and executing that.
+	# A srart:
+	# grep -e `id -un`:x:`id -u`:`id -g` /etc/passwd
+	# Even better, because the above assumes shadow passwords ("x") and maybe not everyone has them:
+	# grep -e `id -un` /etc/passwd | grep `id -u`:`id -g`
 
+	# Use the above and then pull out (suing awk?) the last field of the line, which is the path to the default shell
 
 
 else
