@@ -87,7 +87,7 @@ screen -wipe > /dev/null
 	sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"' && \
 	# Set the session as "multiuser"
 	sleep 0.2 && screen -S screendoor -X multiuser on && \
-	# Make this window read-only
+	# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
 	sleep 0.2 && screen -S screendoor -X aclchg \* -w 0
 	fi
 
@@ -198,8 +198,11 @@ then
 		# If all is good during this time the next line is uncommented, then leave it uncommented.
 	#rm -f ~/screen.xDISPLAY.txt
 
-	# Need to work to have zsh be default login shell and then remove next line.
-	zsh && exit
+
+	# Screendoor is written in bash, so at this point we are leaving the user in a bash shell.  Bash may not be the user's default login shell.  So, replace (using exec) the bash session (we still stay inside this screen window) with the default login shell.
+
+	# Need to add test for default login shell, for now we just assume zsh:
+	exec zsh
 
 
 
