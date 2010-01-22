@@ -207,6 +207,18 @@ then
 	# Use the above and then pull out (suing awk?) the last field of the line, which is the path to the default shell
 
 
+	# Here is some related input from the /etc/screenrc file:
+		# shell:  Default process started in screen's windows.
+		# Makes it possible to use a different shell inside screen
+		# than is set as the default login shell.
+		# If begins with a '-' character, the shell will be started as a login shell.
+		# shell                 zsh
+		# shell                 bash
+		# shell                 ksh
+		#        shell -$SHELL
+
+
+
 else
 
 

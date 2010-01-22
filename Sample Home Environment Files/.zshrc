@@ -202,6 +202,8 @@ setopt \
 	HIST_IGNORE_ALL_DUPS \
 	HISTVERIFY \
 	nohup \
+	nonomatch
+	# the nonomatch is needed for when running commands that have a double-hyphen, like: /usr/bin/mysqldump --user=root --password=xxx --host=127.0.0.1 --all-databases 
 #	zle
 
 #  The "nohup" option means that background jobs will not be hung up (nohup = no-hang-up) when you exit out of the zsh shell.  For info on the nohup option above see http://zsh.sourceforge.net/FAQ/zshfaq03.html#l35 | http://www.quantprinciple.com/invest/index.php/docs/tipsandtricks/unix/jobcontrol/   |   http://en.wikipedia.org/wiki/Nohup
