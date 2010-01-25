@@ -20,6 +20,8 @@
 # So, if screen is already running (that is, if the parent process of this script is "screen" -- the line above tests this), then we just connect to the already-created window
 # Login -> shell startup script -> run screendoor (setup Cornerstone and new window) -> [start screen] -> prompts new shell -> shell startup script (which prompts running this file, now going down to this section) -> screendoor connects to new window
 #
+# Often, sleep commands (to delay 1/5 of a second) are inserted because the screen commands often "return" *immediately* AND there is another screen command immediately following which depends on the the first sleep command *completing*.  So, we want to make sure it completes (even a screen command as simple as setting a title can return immediately, and if the next command references a window with that title, that next command may not work because the "set title" command returned immediately without having yet set the title).
+#
 # When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
 
 
