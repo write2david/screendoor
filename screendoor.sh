@@ -79,7 +79,7 @@ screen -wipe > /dev/null
 			# because then if we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" (which would be the default)
 	screen -S screendoor -d -m -t NewWindow sleep 99999999999d && \
 	# Rename the window title...	
-	screen -S screendoor -p0 -X title Cornerstone && \
+	sleep 0.2 && screen -S screendoor -p0 -X title Cornerstone && \
 	# Write s message on the Cornerstone window using the "stuff" screen command
 	# \015 is octal ASCII code for carriage return.
 		# Need to use 'eval' so that the text \015 isn't printed literally
