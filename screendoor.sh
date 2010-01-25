@@ -86,7 +86,9 @@ screen -wipe > /dev/null
 	# \015 is octal ASCII code for carriage return.
 		# Need to use 'eval' so that the text \015 isn't printed literally
 		# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
-	sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"' && \
+	# Commenting out next line, trying to make the message into a 1-liner
+	#sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"screendoor\"). \015"' && \
+	sleep 0.2 && screen -S screendoor -p Cornerstone -X eval 'stuff "This window holds open the central screendoor session. \015"' && \
 	# Set the session as "multiuser"
 	sleep 0.2 && screen -S screendoor -X multiuser on && \
 	# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
