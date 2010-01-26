@@ -3,10 +3,16 @@
 #
 #
 # I like the default screen keybindings, so I won't change any.
+# But the following can be uncommented if desired:
+#
+# With these you go to the previous or next windows using Ctrl+left and Ctrl+right:
+# bindkey "^[Od" prev        # change to previous window with ctrl-left
+# bindkey "^[Oc" next        # change to next window with ctrl-right
 #
 #
 # Allow for long scrolling (Ctrl-A, Esc)
   defscrollback 10000
+#
 #
 #
 #
