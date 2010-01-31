@@ -140,7 +140,7 @@ git show HEAD~4 = show the great-great-grandparent of HEAD   (in zsh, you may ne
 
 git show [SHA-1]  =  show info on the commit specified by the SHA-1
 
-git show [branch]  = show tip of the specified branch
+git show [branch]  = show tip (last commit) of the specified branch
 
 
 You can see the contents of a file, the listing of a directory or a commit with  [rev = SHA-1]:
@@ -191,6 +191,8 @@ git tag [title] [SHA1-1]  = create a "lightweight tag" which points to a certain
 git tag -a (or -s) -m "[msg]"  [tagname]  [SHA-1]   = create a tag object, which can be signed
 
 
+Branching: You should always create a branch before starting work on a feature. This way, the master will always be in a working state, and you’ll be able to work in isolation of other’s changes.
+
 git branch [new-branch-name]   =  create new branch from master branch
 
 git branch = list branches
@@ -207,7 +209,7 @@ git branch -d [branch]   = delete branch, ensuring all differences have been mer
 git branch -D [branch]   = delete branch, no matter whether all differences have been merged
 
 
-git reset = Sets the current head to the specified commit and optionally resets the index and working tree to match. This command is useful if you notice some small error in a recent commit (or set of commits) and want to redo that part without showing the undo in the history.  (If you want to undo a commit other than the latest on a branch, git-revert is your friend.)
+git reset = kill any changes since your last commit. Sets the current head to now become a specified commit and optionally resets the index and working tree to match. This command is useful if you notice some small error in a recent commit (or set of commits) and want to redo that part without showing the undo in the history.  (If you want to undo a commit other than the latest on a branch, git-revert is your friend.)
 
        --mixed
            Resets the index but not the working tree (i.e., the changed files
@@ -241,6 +243,9 @@ git reset --hard HEAD~3  = The last three commits (HEAD, HEAD^, and HEAD~2) were
 
 Haven't committed yet, but don't want to save the changes? You can throw them away:
 git reset --hard
+
+
+git blame <file>  --  to see who changed a file last, and when
 
 
 Messed up the commit message? This will let you re-enter it:

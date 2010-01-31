@@ -1,5 +1,7 @@
 # Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.zshrc
 #
+#    Or, for easy wget'ing:  www.tinyurl.com/get-screendoor-zshrc
+#
 # Git: http://github.com/write2david/screendoor
 
 precmd() {
