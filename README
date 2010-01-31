@@ -2,24 +2,36 @@ WELCOME TO SCREENDOOR
 
 Website:  http://tech.thedesignhut.net/gnu-screen
 
-Latest version available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
-	Or for easy wget'ing:  www.tinyurl.com/get-screendoor
-
 Git: http://github.com/write2david/screendoor
+
+Latest version available for download at:
+	http://github.com/write2david/screendoor/blob/master/screendoor.sh
+
+	Or:  www.tinyurl.com/get-screendoor   (for easy typing/wget'ing)
+
 
 
 
 INTRODUCTION TO SCREEN
 
-Official Project Websites:
+Using "GNU Screen" is like having multiple tabs on your terminal (a.k.a. "command-line" or "shell").  Additionally, each terminal can access each other terminal.*  "GNU Screen" lets you disconnect, for example, from your SSH connection (perhaps when using Putty) and the shell/program you were using (over SSH) remains running, within the Screen session.  Screen also features scrollback history, copy-and-paste that doesn't require a mouse, etc.
+
+*Whether the terminal is a:
+	VT ("Virtual Terminal," -- usually accessed by Alt-F1, Alt-F2, etc)
+	SSH connection
+	xterm/Terminal/Konsole window OR tab
+	etc.
+
+
+Official GNU Screen Project Websites:
       http://www.gnu.org/software/screen/
       http://savannah.gnu.org/projects/screen/
 
 
-Wikipedia summary:  http://en.wikipedia.org/wiki/GNU_Screen
+Wikipedia's "GNU Screen" article:  http://en.wikipedia.org/wiki/GNU_Screen
 
 
-Introduction to Features & How-to Guides: 
+Introduction to GNU Screen Features, And How-to Guides: 
       From Debian:  http://www.debian-administration.org/articles/34
       From Sun Microsystems:  http://www.sun.com/bigadmin/features/articles/gnu_screen.html
       From RedHat:  http://magazine.redhat.com/2007/09/27/a-guide-to-gnu-screen/
@@ -28,14 +40,10 @@ Introduction to Features & How-to Guides:
 
 INTRODUCTION TO SCREENDOOR
 
-It is so nice to be able to login at my computer (directly, or over SSH, or opening an xterm/Terminal window, etc.) and always be placed inside a pre-existing screen session, able to access all other open terminals.
-        This also lets you disconnect from your SSH (perhaps using Putty) connection and the program remains running.
+It is so nice to be able to access any type of shell on my computer and always be inside a pre-existing Screen session, able to access all other running shells.  Using Screendoor, I don't have to remember to start a Screen session for each terminal, or to attached to a previously created Screen session -- I am always automatically placed inside of one.
 
-
-The code contains a fair amount of comments along the way in each file, detailing the screen-related issues for dealing with logins that happen in situations like SCP and xMing, and if x-windows is running from within screen and then you open a xterm w/in that, etc.
-
-When using Screendoor, the main Screen session is named "main," created upon the first login/shell.  New windows are titled by date & time.  The "main" session contains a window named "Cornerstone" to hold it open (it is a blank, non-writable window, giving a short message, and is held open with a long "sleep" command).
-	In case two logins happen during the same minute or second, milliseconds is also used in the window name,  in order to make sure each window name is unique.
+When using Screendoor, the main Screen session is named "Screendoor," created by the first login/shell to run.  New Screen windows are created for each new terminal, and are titled by date & time.
+	The "Screendoor" session contains a window named "Cornerstone" simply to hold the session open ("Cornerstone" is a blank, non-writable window, showing a short notice, and is held open with a long "sleep" command).
 
 
 
@@ -60,4 +68,19 @@ There are 3 steps:
 
 TIPS
 
-Clone this git repo, check it out, and then softlink your .bash_login (or .zshrc), .screenrc, etc to the checked-out repo (working directory).
+Clone this git repository to a new local directory, "checkout" the latest revision ("HEAD"), and then softlink these files to your home directory:
+	screendoor.sh
+	Your shell-related files (.bash_login, .bashrc, or .zshrc)  -- optional
+	.screenrc  (optional)
+
+
+
+HISTORY
+
+Screendoor was begun in early 2009.
+
+The original .bashrc and .bash_login files (which were the ancestors of screendoor.sh) are available in this commit: db4db9f9f5310c90c1a5a55fa3e26bbf5ab65ca7
+
+The Screendoor code contains a fair amount of comments along the way in each file.  It deals with screen-related issues for  logins that happen in situations like SCP and xMing, and if x-windows is running from within screen and then you open a xterm w/in that, etc.
+
+Separately, Ryan Lynch worked on a script to accomplish the same goal (http://www.mail-archive.com/screen-users@gnu.org/msg02683.html)
