@@ -6,16 +6,54 @@ TODO
 2)  With multiuser on, can non-root accounts connect to a screendoor session owned by root?
 
 
-3)  Add the "Entering GNU Screen, press any key to cancel."  (from porch.sh)
-	And, "You are now in GNU Screen (via screendoor)."
-	And, if we detect that this is a login shell (SSH, virtual console (F1, F2, etc): "Press Ctrl-Up to view any login-related messages (such as SSH port-forwarding issues, etc)."  # Issue is that auto-running screen at login clears the screen and then you miss any login-related messages.  Perhaps see if removing the "clear" command from screendoor.sh fixes the problem.  Can't test this over SSH since "clear" does not affect with Putty the same way it does in-person.
+3)  Add the "Entering GNU Screen, press any key to cancel."
+
+Credit to Ryan Lynch <ryan.b.lynch@gmail.com>
+
+	`read -s -n 1 -t ${TIMEOUT}`
+
+If you're not familiar with it, 'read' is a BASH builtin that prompts
+for terminal input (keyboard, in this case).  Usually, you pass the
+name of a variable after all of the options, and 'read' sets the
+variable to whatever input it received.
+
+In this case, I don't care about what was input, just whether anything
+was input, at all (i.e., did the user press a key?). If 'read' returns
+nonzero, there was no input received, meaning the user didn't press
+anything.  In my script, if 'read' returns false, I invoke 'screen';
+otherwise, I just exit.
+
+The various option flags make this work a lot more neatly:
+
+ * '-s': Don't echo the user's input keystrokes to the terminal.
+ * '-n 1': Return immediately after receving 1 character/byte of input
+(instead of waiting for a newline).
+ * '-t ${TIMEOUT}': If ${TIMEOUT} seconds pass without receiving any
+input, return nonzero (false).
+
+I also print this message, right before calling 'read':
+
+"Joining a Screen session in ${TIMEOUT} seconds.  Press any key to
+abort and enter BASH normally."
+
+
+
+	And, if we detect that this is a login shell (SSH, virtual console (F1, F2, etc): "Press Ctrl-Up to view any login-related messages (such as SSH port-forwarding issues, etc)."  # Note this this is hard to test over Putty since  "clear" does not affect with Putty the same way it does in-person.
 	And similar for "Leaving GNU Screen."
+
+		Exiting in ${TIMEOUT} seconds (your Screen session terminated, or you
+de-attached).  Press any key to abort and stay in a normal BASH
+session.'
+
+
 	Comment them both out, and add a line "Uncomment to enable message."
 
 
 4)  Possibly: Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
 	Cornerstone is mostly needed to ensure multiuser?  If so, this this line of screenrc, which can be overwritten:
 	multiuser off      (or on)
+
+	Perhaps I don't need to have the "Cornerstone" window held open all the time, it can recreated each time it's needed.
 
 
 5)  Copy/paste e-mail exchange into porch-note.txt
@@ -30,3 +68,7 @@ TODO
 	WAIT, this is actually normal behavior, I believe.
 		The shutdown messages are visible when you are sitting at the terminal.
 		But not when using GNU screen remotely over SSH.
+
+7)  Can we do without writing/reading variables to a file, and simply "export" and read the variables?  ...and if not in all circumstances, and we do this at least for one or two of the variables?
+
+8)  Rather than checking if parent process = screen, would it be better if we check of the $TERM variable = screen?
