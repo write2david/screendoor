@@ -234,18 +234,19 @@ else
 # the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
 # bash shell, but when that bash shell creates/connects to a new screen window,
 # the shell in that new screen window doesn't have the $DISPLAY variable set).
-# So, while we are still in the initial  shell, we will write the $DISPLAY variable to a file, and
+# So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
 # then read it from within the new window's shell.
 # Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
 
 echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 
+# In case two logins happen during the same minute or second, milliseconds is also used in naming the windows, in order to make sure each window name is unique (needed for the section of code that writes/recalls the window title).  Later, the milliseconds part of the window title will be removed, after the uniqueness becomes unneeded.
 
 
 #  Big multi-line command, using "\" to do multi-line and "&&" to string commands together...
 	#
-	# dump the date/time to a file, will be used to name the screen window.
+	# Dump the date/time to a file, will be used to name the screen window.
 	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
 	#
 	# Use "-X" to send a command and then immediately return.  The command is: create a new window on central "Screendoor" session named [content from file]:
