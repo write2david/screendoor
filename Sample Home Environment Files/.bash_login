@@ -1,6 +1,9 @@
 #!/bin/bash
 #
 # Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.bash_login
+#
+# Or:  wget www.tinyurl.com/get-screendoor-bash-login
+#
 # Git: http://github.com/write2david/screendoor
 #
 # Show current directory or current running program in X-windows terminal window

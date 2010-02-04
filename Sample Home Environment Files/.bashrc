@@ -1,6 +1,9 @@
 #!/bin/bash
 #
 # Latest version available for download at:  http://github.com/write2david/screendoor/blob/master/Sample%20Home%20Environment%20Files/.bashrc
+#
+# Or:  wget www.tinyurl.com/get-screendoor-bashrc
+#
 # Git: http://github.com/write2david/screendoor
 #
 #
