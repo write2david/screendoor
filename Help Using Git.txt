@@ -40,6 +40,44 @@ Commit = Revision
 
 
 
+============SORT THIS STUFF============
+
+"HEAD" always refers the current section to the current branch.
+    For example:
+    $ git checkout 0a633bf5
+    # Git returns this:
+    "HEAD is now at 0a633bf... [commit message]"
+
+
+
+the ~ suffix which refers to the parent of a commit, or if followed by a number, to the Nth parent. For example, since "HEAD" refers to the most recent commit in the current branch, "HEAD~", refers to the previous commit, and "HEAD~2" refers to two commits back in the history.
+
+
+
+You can use "git log" to explore the range syntax just introduced. For example, to see a list of the most recent 3 revisions you can use "HEAD~3..", (the destination of the range is implicitly HEAD in this case):
+
+$ git log HEAD~3..
+
+
+
+Another example with git log:
+git log --since="2 weeks ago" --until="yesterday"
+
+
+
+
+To prevent confusion with options and branch names, paths may need to be prefixed with "-- " to separate them from git options/arguments or SHA-1's.   Listing them after "--" which is necessary to distinguish commit names from file names, for example:
+
+$ git log -- Makefile
+
+
+
+
+Remember:
+git show [Sha-1]
+
+
+
 
 ======BASIC GIT COMMANDS======
 
