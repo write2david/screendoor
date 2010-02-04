@@ -1,12 +1,26 @@
-TODO
+TODO & BUG LIST
 
 
-1)  Does screendoor work fine when using it in a non-root account?
-
-2)  With multiuser on, can non-root accounts connect to a screendoor session owned by root?
+*** SSH-ing from one system running screendoor to another system running screendoor does the normal nested-screen-session deal, but in the top-level (local) session, it also seems to add the bottom-level (remove) session's list of windows.  An odd bug/feature.
 
 
-3)  Add the "Entering GNU Screen, press any key to cancel."
+*** The X-forwarding doesn't seem to be working.   Test on x-ming.   Doesn't work from work, I get:   "generic event extension missing"
+
+
+
+*** Enable something like this for each of .bashrc, .bash_login, .zshrc, etc:
+
+source ~/screendoor.sh --call-from-shell
+
+        .....which then does the new if-file-exists test I have written on paper
+
+
+***  Does screendoor work fine when using it in a non-root account?
+
+***  With multiuser on, can non-root accounts connect to a screendoor session owned by root?
+
+
+***  Add the "Entering GNU Screen, press any key to cancel."
 
 Credit to Ryan Lynch <ryan.b.lynch@gmail.com>
 
@@ -49,17 +63,16 @@ session.'
 	Comment them both out, and add a line "Uncomment to enable message."
 
 
-4)  Possibly: Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
+
+***  Possibly: Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
 	Cornerstone is mostly needed to ensure multiuser?  If so, this this line of screenrc, which can be overwritten:
 	multiuser off      (or on)
 
 	Perhaps I don't need to have the "Cornerstone" window held open all the time, it can recreated each time it's needed.
 
 
-5)  Copy/paste e-mail exchange into porch-note.txt
 
-
-6)  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.
+***  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.
 	Seems that the messages are sent to /dev/ttyS0.
 	cat /dev/ttyS0   --  this will catch them and display them
 	so maybe the "shutdown" command needs to be "shutdown && cat /dev/ttyS0"
@@ -69,6 +82,8 @@ session.'
 		The shutdown messages are visible when you are sitting at the terminal.
 		But not when using GNU screen remotely over SSH.
 
-7)  Can we do without writing/reading variables to a file, and simply "export" and read the variables?  ...and if not in all circumstances, and we do this at least for one or two of the variables?
 
-8)  Rather than checking if parent process = screen, would it be better if we check of the $TERM variable = screen?
+***  Can we do without writing/reading variables to a file, and simply "export" and read the variables?  ...and if not in all circumstances, and we do this at least for one or two of the variables?
+
+
+***  Rather than checking if parent process = screen, would it be better if we check of the $TERM variable = screen?
