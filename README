@@ -7,14 +7,16 @@ Website & Git: www.github.com/write2david/screendoor
 
 ==INTRODUCTION TO SCREEN==
 
-	Using "GNU Screen" is like having multiple tabs on your terminal (a.k.a. "command-line" or "shell").  Additionally, each terminal can access each other terminal.*
-		"GNU Screen" lets you disconnect, for example, from your SSH connection (perhaps when using Putty) and the shell/program you were using (over SSH) remains running, within the Screen session.  Screen also features scrollback history, copy-and-paste that doesn't require a mouse, etc.
+	Using "GNU Screen" is like having multiple tabs on all your terminals (a.k.a. "command-line" or "shell"). Additionally, each terminal (that uses Screen) allows the user to quickly access every other terminal* (that uses Screen).
+		This is especially helpful for SSH connections, where it is much quicker to generate two or three more Screen tabs (actually called "windows") and switch between them than to initiate two or three other SSH connections and switch between them.  
+		"GNU Screen" lets you disconnect, for example, from your SSH (or Putty) connection, and the shell/program you were using remains running on the remote machine (within the remote computer's Screen session), ready for you to reconnect to it  -- from any machine.  Screen also features scrollback history, copy-and-paste that doesn't require a mouse, etc.
 
 
-*Whether the terminal is a:
-	VT ("Virtual Terminal," -- usually accessed by Alt-F1, Alt-F2, etc)
+*No matter whether the terminal is a:
+	VT ("Virtual Terminal," -- usually accessed by Alt-F1, Alt-F2, etc.)
 	SSH connection
-	xterm/Terminal/Konsole window OR tab
+	An xterm/Terminal/Konsole window
+	An xterm/Terminal/Konsole tab	
 	etc.
 
 
@@ -36,7 +38,7 @@ Introduction to "GNU Screen" Features, And How-to Guides:
 
 ==INTRODUCTION TO SCREENDOOR==
 
-It is so nice to be able to access any type of terminal on my computer and always be inside a pre-existing Screen session, able to access all other running terminals.  Using Screendoor, I don't have to remember to start a Screen session for each terminal, or to attached to a previously created Screen session -- I am always automatically placed inside of one central Screen session.
+GNU Screen, by itself, is not "enabled" for each terminal that is created.  This is the role of Screendoor, to create and manage a central Screen session to be used by all terminals that are created.  It is so nice to be able to access any type of terminal on my computer and always be placed inside a pre-existing Screen session, able to access all other active terminals.  Using Screendoor, I don't have to remember to start a Screen session for each terminal, or to attached to a previously created Screen session -- this is the role of Screendoor; I am always automatically placed inside of one central Screen session.  When I SSH into my home machine, I can then view and access the Konsole window I was using before I left home.
 
 	When using Screendoor, the main Screen session is named "Screendoor," created by the first login/shell to run.  A new Screen window is created for each new terminal, and the windows are titled according to the date & time they were opened.
 
