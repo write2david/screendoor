@@ -38,13 +38,15 @@ Introduction to "GNU Screen" Features, And How-to Guides:
 
 ==INTRODUCTION TO SCREENDOOR==
 
-GNU Screen, by itself, is not "enabled" for each terminal that is created.  This is the role of Screendoor, to create and manage a central Screen session to be used by all terminals that are created.  It is so nice to be able to access any type of terminal on my computer and always be placed inside a pre-existing Screen session, able to access all other active terminals.  Using Screendoor, I don't have to remember to start a Screen session for each terminal, or to attached to a previously created Screen session -- this is the role of Screendoor; I am always automatically placed inside of one central Screen session.  When I SSH into my home machine, I can then view and access the Konsole window I was using before I left home.
+GNU Screen, by itself, is not "enabled" for each terminal that is created. Simply configuring the shell to automatically run Screen when a terminal is opened is not enough to enable easy user access to the other running terminals, and will actually be problematic in several situations (such as when there is a SCP login).
+	Thus, the role of Screendoor: to create and manage a central Screen session to be used by all (normal) terminals that are created.  It is so nice to be able to access any type of terminal on my computer and always be placed inside a pre-existing Screen session, able to access all other active terminals.  Using Screendoor, I don't have to remember to start a Screen session for each terminal, or to attached to a previously created Screen session -- this is the role of Screendoor; I am always automatically placed inside of one central Screen session.  When I SSH into my home machine, I can then view and access the Konsole window I was using before I left home.
 
 	When using Screendoor, the main Screen session is named "Screendoor," created by the first login/shell to run.  A new Screen window is created for each new terminal, and the windows are titled according to the date & time they were opened.
 
 	The "Screendoor" session contains a window named "Cornerstone" simply to hold the session open ("Cornerstone" is a blank, non-writable window, showing a short notice, and is held open with a long "sleep" command).
 
-	Screendoor is written as a BASH script and contains a fair amount of commenting.  It deals with Screen-related issues such as: logins like SCP and X-Ming, X-Windows running from within Screen and xTerms running within X-Windows, etc.
+	Screendoor is written as a BASH script and contains a fair amount of commenting throughout the code.  It deals with Screen-related issues such as: responding to logins initiated by programs like SCP or X-Forwarding-Over-SSH (including Xming), wiping dead Screen sessions, X-Windows running from within Screen and xTerms running within X-Windows, etc.
+	Though written in BASH, Screendoor honors whatever default shell the user has, and will drop the user into their default shell after Screendoor is run.
 
 
 
@@ -106,6 +108,6 @@ April 1, 2010 (planned): First Beta Release
 
 March 1, 2010 (planned):  First Alpha Release
 
-October 9, 2009: Ryan Lynch posted a script to accomplish much of the same goals as Screendoor (http://www.mail-archive.com/screen-users@gnu.org/msg02683.html)
+October 9, 2009: Ryan Lynch posted a script to accomplish several of the same goals as Screendoor (http://www.mail-archive.com/screen-users@gnu.org/msg02683.html)
 
 Early 2009:  Screendoor was begun as extended .bash_login and .bashrc files.  
