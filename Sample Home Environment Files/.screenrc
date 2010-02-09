@@ -3,6 +3,51 @@
 # Git: http://github.com/write2david/screendoor
 #
 #
+#
+# The following standard, common command are not changed by this .screenrc file:
+#
+# ^A c  //  create new window
+#
+# ^A "  //  bring up window list
+#
+# ^A n  //  switch to next window
+# 
+# ^A p  //  switch to previous window
+#
+# ^A ^A // switch to previous screen (toggle)
+# 
+# ^A escape or ^A [ //  switch to copy mode, and then:  spacebar to begin selection, cursor keys to add to selection, spacebar to end selection mode, and ^A ] or ^A :paste .  to paste
+# 
+# ^A ? - show the help screen!
+#
+# ^A k  //  kill current window and anything in it  (forceful exit)
+# 
+# ^A d  //  detach from session
+#
+# ^A t // display the current time, date, and loadavg of the machine
+#
+# split display    C-a S     //  One press splits the display into halves; a second press splits it into thirds, a third into fourths, and so on. 
+#
+#Newly spawned regions are empty; switch the input focus to one with C-a TAB and then select a window for it to display. 
+#
+ #   jump to next display region    C-a tab
+#
+#Once in the blank half, you have to set this bottom half of the screen to use one of the two earlier created sessions. To do this, press Ctrl+a, then " (shift+'). You will be presented with a list of available screen sessions, pick one using the arrow keys (be careful not to pick the one already at the top or you'll have a mirror console), and activate it by pressing Enter. Now type top and switch to the upper half by pressing again Ctrl+a TAB. You should now have a bash prompt waiting for commands in the upper half and system resources monitoring in the bottom half.
+#
+#    remove current region     C-a X
+#    remove all regions but the current one    C-a Q
+#    resize a region:   ^A -  or  ^A+   or   Ctrl-A :resize 3
+#
+#
+#A key to *swap* the position of the current in the window list with the window to the left (or to the right).     This is much like Firefox with tabs, where you can drag tabs to the left or to the right, to move it within the list/line of tabs.
+#
+# setup keybindings for:  'number +1'   and   'number -1'.
+#
+#
+# capture all input from keyboard?  screen /dev/ttyS0 19200
+#
+#
+#
 # I like the default screen keybindings, so I won't change any.
 # But the following can be uncommented if desired:
 #
