@@ -1,9 +1,18 @@
-======EXTRA HELP======
-Git Community Book
-http://cheat.errtheblog.com/s/git/
-man gittutorial
-man gittutorial-2
-git cheat sheet:   http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
+HELP USING GIT
+
+
+======OTHER RESOURCES======
+
+Git Community Book:
+	http://book.git-scm.com/
+
+Git Cheat Sheets:
+	http://cheat.errtheblog.com/s/git/
+	http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
+
+Man Pages:
+	gittutorial
+	gittutorial-2
 
 
 
@@ -12,6 +21,7 @@ gitk
 gitk --all
 qgit4
 git-gui or git gui
+
 
 
 
@@ -26,15 +36,17 @@ Add color to output:
 	git config --global color.branch auto
 	
 
+
+
 ====TERMINOLOGY====
 
-HEAD = the current tip of the current branch, the last (most recent) commit/revision of the branch.
-	specified in the .git/HEAD file
-	the HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
+HEAD = the current tip of the current branch. A "tip" is the the last (most recent) commit/revision of the branch.
+	It is pecified in the .git/HEAD file.
+	The HEAD file should specify a commit/tree to point to, like:  "41d5b7e362c33dc54cbc814e50403a2084204f9f"
 
 
-Tree-ish
-SHA-1
+Tree-ish = 
+SHA-1 = 
 Commit = Revision
 	--Links to a parent commit and a tree, each of which is ID'd by its SHA-1
 
@@ -54,28 +66,6 @@ the ~ suffix which refers to the parent of a commit, or if followed by a number,
 
 
 
-You can use "git log" to explore the range syntax just introduced. For example, to see a list of the most recent 3 revisions you can use "HEAD~3..", (the destination of the range is implicitly HEAD in this case):
-
-$ git log HEAD~3..
-
-
-
-Another example with git log:
-git log --since="2 weeks ago" --until="yesterday"
-
-
-
-
-To prevent confusion with options and branch names, paths may need to be prefixed with "-- " to separate them from git options/arguments or SHA-1's.   Listing them after "--" which is necessary to distinguish commit names from file names, for example:
-
-$ git log -- Makefile
-
-
-
-
-Remember:
-git show [Sha-1]
-
 
 
 
@@ -94,20 +84,24 @@ git add .  = add, recursively, all files
 
 git add *  or   git add *.txt  =  Fileglobs (e.g. *.c) can be given to add all matching files.
 
-git rm --cached  = does not remove the file from the working dir, but removes them from scope of the project (not tracked anymore) and they will be deleted from the git repo upon next commit.  Commits absence-of-file from the project.   git-show will display that it will be deleted from repo upon next commmit.   Is not used for unstaging a file, but rather it stages a file-deletion commit.
-
 
 git add -u  = Tell git to remove files that are deleted in file system but not yet removed from index (instead of git rm on all of them)
+
 
 
 ==REMOVING==
 
 git rm   =  removes the file in the working dir, removes them from the scope of the project (they are untracked -- well, actually they can't be tracked because they don't exist anymore), and they will be deleted from the repo upon the next commit.
 
+git rm --cached  = does not remove the file from the working dir, but removes them from scope of the project (not tracked anymore) and they will be deleted from the git repo upon next commit.  Commits absence-of-file from the project.   git-show will display that it will be deleted from repo upon next commmit.   Is not used for unstaging a file, but rather it stages a file-deletion commit.
+
+
+
 
 ==STATUS==
 
 git status / show files added to the staging area, files with changes, and untracked files
+
 
 
 ==COMMIT==
@@ -139,7 +133,7 @@ git commit --amend
   edit the commit message of the most recent commit
 
 git commit --amend <file1> <file2> ...
-  Redo previous commit, including changes made to <file1>, <file2>, etc...
+  Redo previous commit (replacing the last commit with a new one), including changes made to <file1>, <file2>, etc...
   The commit you create replaces the current tip.
   This is helpful is you make a change to a file, then update that change, and
   then want to commit the updated change.  Rather than two commits towards one
@@ -147,8 +141,19 @@ git commit --amend <file1> <file2> ...
   on some small issue.
 
 
+# Add to the index and commit cake.txt in one go.
+git commit cake.txt
+
+
+Messed up the commit message? This will let you re-enter it:
+git commit --amend
+
+
 
 ==LOG==
+
+Git log pipes through 'less' and generates output on the fly (as-needed), so you don't have to worry about the potential problem of loading a HUGH history into less.
+
 
 git log -- show complete log of all past commits, giving the commit SHA-1,
 author, date, and summary line
@@ -164,6 +169,37 @@ git log --stat --summary
 
 
 git whatchanged -p [filename] 
+
+
+You can use "git log" to explore the range syntax just introduced. For example, to see a list of the most recent 3 revisions you can use "HEAD~3..", (the destination of the range is implicitly HEAD in this case):
+
+$ git log HEAD~3..
+
+
+
+git log v2.5    = show commits since (not reachable from) tag of "v2.5"
+
+git log [file]  =  show commits that modify [file]
+
+
+
+Another example with git log:
+git log --since="2 weeks ago" --until="yesterday"
+
+
+To prevent confusion with options and branch names, paths may need to be prefixed with "-- " to separate them from git options/arguments or SHA-1's.   Listing them after "--" which is necessary to distinguish commit names from file names, for example:
+
+$ git log -- Makefile
+
+
+git log    /    show history of recent commits, most recent on top. Useful options:
+  --color       with color
+  --graph       with an ASCII-art commit graph on the left
+  --decorate    with branch and tag names on appropriate commits
+  --stat        with stats (files changed, insertions, and deletions)
+  -p            with full diffs
+
+
 
 
 ==SHOW==
@@ -188,10 +224,6 @@ git show rev:path/to/directory
 git show rev
 
 
-Aside from merging, sometimes you want to just pick one commit from a different branch. To apply the changes in revision rev and commit them to the current branch use:
-
-git cherry-pick rev
-
 
 ==DIFF==
 
@@ -211,22 +243,20 @@ git whatchanged
 	-p	Show text content of diffs, instead of just git's internal diff output format (which  is useful only to tell the changed paths and their nature of changes.
 
 
-git log    /    show history of recent commits, most recent on top. Useful options:
-  --color       with color
-  --graph       with an ASCII-art commit graph on the left
-  --decorate    with branch and tag names on appropriate commits
-  --stat        with stats (files changed, insertions, and deletions)
-  -p            with full diffs
+Between a particular version and 2 versions ago:
+$ git diff SHA1_HASH "master~2"
 
 
-git log v2.5    = show commits since (not reachable from) tag of "v2.5"
 
-git log [file]  =  show commits that modify [file]
+==TAG==
 
 
 git tag [title] [SHA1-1]  = create a "lightweight tag" which points to a certain commit (specified by its SHA-1).  Cannot be signed.
 
 git tag -a (or -s) -m "[msg]"  [tagname]  [SHA-1]   = create a tag object, which can be signed
+
+
+==BRANCHING==
 
 
 Branching: You should always create a branch before starting work on a feature. This way, the master will always be in a working state, and you’ll be able to work in isolation of other’s changes.
@@ -235,16 +265,34 @@ git branch [new-branch-name]   =  create new branch from master branch
 
 git branch = list branches
 
+git branch -d [branch]   = delete branch, ensuring all differences have been merged
+git branch -D [branch]   = delete branch, no matter whether all differences have been merged
+
+After merging, if you delete the branch, it's still available in the remaining branch's history.
+
+
+==CHECKING OUT A BRANCH==
+
+
 git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
 git checkout -- [name of file]   = add or replace [file] from repo into working directory
 git checkout [SHA-1]  = Examine an earlier version of your source
 git checkout [SHA-1 of tree-ish: a tree, commit, or tag] [name of file]  = checkout file from certain tree
 	[good to do "git log [filename]" first to find out which tree]
 
+
+==MERGING BRANCHES==
+
 git merge [branch] = merge [branch] into your master branch
 
-git branch -d [branch]   = delete branch, ensuring all differences have been merged
-git branch -D [branch]   = delete branch, no matter whether all differences have been merged
+
+git cherry-pick rev = Aside from merging, sometimes you want to just pick one commit from a different branch. To apply the changes in revision rev and commit them to the current branch use cherry-pick.
+
+A merge that is a "fast-forward" merge will not show a merge in the history (there will be no 2-parent commit).  It will just appear that all work was done on the destination branch. 
+
+
+
+==RESETTING==
 
 
 git reset = kill any changes since your last commit. Sets the current head to now become a specified commit and optionally resets the index and working tree to match. This command is useful if you notice some small error in a recent commit (or set of commits) and want to redo that part without showing the undo in the history.  (If you want to undo a commit other than the latest on a branch, git-revert is your friend.)
@@ -283,22 +331,17 @@ Haven't committed yet, but don't want to save the changes? You can throw them aw
 git reset --hard
 
 
+To "unstage" a file, aka remove it from the index:
+git reset HEAD cake.txt
+
+
+
+==MISC==
+
 git blame <file>  --  to see who changed a file last, and when
 
-
-Messed up the commit message? This will let you re-enter it:
-git commit --amend
-
-Forgot something in your last commit? That's easy to fix.
-    git reset --soft HEAD^
-    Add that stuff you forgot:
-    git add forgot.txt these.txt
-    Then write over the last commit:
-    git commit
-
-
-
 git pull = does both "fetch" and "merge"
+
 
 
 git repo is technically both the working dir and the .git dir, though often the repo's are distributed w/a blank working dir, a blank index, and just the .git directory
@@ -316,45 +359,101 @@ This server is also setup for this to work:
 	it clone git://git.kernel.org/pub/scm/git/git.git/ my-git-test
 
 
+When bandwidth is an issue, people can download the latest version of your repository without downloading all the history, using "shallow checkouts."  Note that such a copy has limitations, see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html , option --depth for details.
+
+Example:
+
+$ git clone --depth 1 git://git.sv.gnu.org/gnulib.git
 
 
 
-ORIGINAL INSTRUCTIONS FOR GITHUB (the items below come from the GitHub repo-creation page):
+git fsck
+running without "--full" is usually cheap and assures the repository health reasonably well.
+
+
+git gc
+repacks the local repository and performs other housekeeping tasks
+
+
+git count-objects
 
 
 
-Global setup:
+==WORKING WITH DELETED ITEMS==
 
-  Download and install Git
-  git config --global user.name "Your Name"
-  git config --global user.email write2david@gmail.com
-  Add your public key
-        
-
-
-Example steps:
-
-  mkdir screendoor
-  cd screendoor
-  git init
-  touch README
-  git add README
-  git commit -m 'first commit'
-  git remote add origin git@github.com:write2david/screendoor.git
-  git push origin master
-
+git ls-files --deleted
+git ls-files -d
+    only shows files that are in STAGING but deleted from WORKING
 
 
 
 
 
-# Add to the index and commit cake.txt in one go.
-git commit cake.txt
+Pull a file back that was deleted:
+
+$ ls -l [filename]
+ls: slosh.tac: No such file or directory
+# oh no!
+
+$ git log -n 1 -- [filename]
+commit 8d4a1f1a94e4aa37c1cb9d329a140d08eec1b587
+
+$ git checkout 8d4a1f^ [filename]
+
+Note that this does not actually put the file back in revision control. You can then add it or just inspect it or whatever from that point.
 
 
 
 
-Rebasing  //  Think of it as:
+If you did actually want to remove a file from history, git filter-branch is the hacksaw you’re looking for. Definitely read up on its manpage before using it, since it will literally rewrite your project’s commits. This actually is a great tool for some actions, and can do all sorts of stuff like totally removing an author’s commits to moving the project root folder around. The command to remove a file from all revisions is:
+
+git filter-branch --index-filter 'git rm --cached <file>' HEAD
+
+This action can definitely be useful when you need to blow out sensitive or confidential information that may have been placed in your repository.
+
+
+
+
+---> Find all deleted files:
+
+git log --summary
+then search for "delete mode"
+
+
+---> Restore the deleted file (that is, restore the file from the parent tree
+of the commit that deleted the file) using this line:
+git checkout [the SHA-1 of the commit the deleted the file]~1 [filename]
+
+           --if the file has spaces, either use backslash to escape them or put the file in quotes
+           --EITHER include the path to the file OR if you are in the directory where the file used to live then you don't need to  include the path (just the filename)
+
+---> Completely remove the DELETED file from the repository history (useful
+if accidentally committed a file that never was needed, or if you committed
+large binary files that are no longer needed, or if committed something now
+considered confidential, etc.)
+	[not sure how to do it]
+           
+
+
+
+
+
+==HOWTO===
+
+Forgot something in your last commit? That's easy to fix.
+    git reset --soft HEAD^
+    Add that stuff you forgot:
+    git add forgot.txt these.txt
+    Then write over the last commit:
+    git commit
+
+
+
+
+
+==REBASING==
+
+Think of it as:
 
     * Find all your (committed) changes, since you branched
     * Reset your branch, so that it's an exact copy of the current master
@@ -394,9 +493,6 @@ COMMIT_ID should be the one BEFORE you want to fiddle with.
 
 
 
-To "unstage" a file, aka remove it from the index:
-git reset HEAD cake.txt
-
 
 
 
@@ -404,84 +500,32 @@ To combine revision 3 and 4 into a single revision, you can use git rebase. If y
 
 
 
-between a particular version and 2 versions ago:
-
-$ git diff SHA1_HASH "master~2"
 
 
-
-
-git count-objects
+==ORIGINAL INSTRUCTIONS FOR GITHUB==
+	(the items below come from the GitHub repo-creation page)
 
 
 
+Global setup:
 
-git ls-files --deleted
-git ls-files -d
-    only shows files that are in STAGING but deleted from WORKING
+  Download and install Git
+  git config --global user.name "Your Name"
+  git config --global user.email write2david@gmail.com
+  Add your public key
+        
 
 
+Example steps:
 
-
-
-Pull a file back that was deleted:
-
-$ ls -l [filename]
-ls: slosh.tac: No such file or directory
-# oh no!
-
-$ git log -n 1 -- [filename]
-commit 8d4a1f1a94e4aa37c1cb9d329a140d08eec1b587
-
-$ git checkout 8d4a1f^ [filename]
-
-Note that this does not actually put the file back in revision control. You can then add it or just inspect it or whatever from that point.
+  mkdir screendoor
+  cd screendoor
+  git init
+  touch README
+  git add README
+  git commit -m 'first commit'
+  git remote add origin git@github.com:write2david/screendoor.git
+  git push origin master
 
 
 
-
-
-If you did actually want to remove a file from history, git filter-branch is the hacksaw you’re looking for. Definitely read up on its manpage before using it, since it will literally rewrite your project’s commits. This actually is a great tool for some actions, and can do all sorts of stuff like totally removing an author’s commits to moving the project root folder around. The command to remove a file from all revisions is:
-
-git filter-branch --index-filter 'git rm --cached <file>' HEAD
-
-This action can definitely be useful when you need to blow out sensitive or confidential information that may have been placed in your repository.
-
-
-
-
----> Find all deleted files:
-
-git log --summary
-then search for "delete mode"
-
-
----> Restore the deleted file (that is, restore the file from the parent tree
-of the commit that deleted the file) using this line:
-git checkout [the SHA-1 of the commit the deleted the file]~1 [filename]
-
-           --if the file has spaces, either use backslash to escape them or put the file in quotes
-           --EITHER include the path to the file OR if you are in the directory where the file used to live then you don't need to  include the path (just the filename)
-
----> Completely remove the DELETED file from the repository history (useful
-if accidentally committed a file that never was needed, or if you committed
-large binary files that are no longer needed, or if committed something now
-considered confidential, etc.)
-	[not sure how to do it]
-           
-           
-
-When bandwidth is an issue, people can download the latest version of your repository without downloading all the history, using "shallow checkouts."  Note that such a copy has limitations, see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html , option --depth for details.
-
-Example:
-
-$ git clone --depth 1 git://git.sv.gnu.org/gnulib.git
-
-
-
-git fsck
-running without "--full" is usually cheap and assures the repository health reasonably well.
-
-
-git gc
-repacks the local repository and performs other housekeeping tasks
