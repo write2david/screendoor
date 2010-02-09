@@ -88,6 +88,15 @@ Step #2) Add the following line to the very END of your shell startup file(s):
 
 
 
+==FAQ==
+
+Q:  When I type exit, it only closes my current window, it doesn't disconnect from my xterm, ssh, or VT terminal. Why not?
+
+A:  When you type "exit" you are exiting your current shell.  But, remember your shell is wrapped inside of Screen, and you are actually connected to Screen rather than to your shell.  To exit from your xterm/ssh/VT terminal, type Ctrl-A d.  Or, to do it a bit more crudely, just close the window (click "X") for xterm / putty /etc.
+
+	With either method, your screen window will be available when you log back in  (if you don't type "exit" first).
+
+
 
 ==BUGS & FEATURE REQUESTS==
 
