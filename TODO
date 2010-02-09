@@ -82,6 +82,12 @@ session.'
 		The shutdown messages are visible when you are sitting at the terminal.
 		But not when using GNU screen remotely over SSH.
 
+For shutdown, do script?:  shutdown %1 && exec cat /dev/ttyS0
+    This way, watching the shutdown message won't need bash (or other shell) running, so that when shutdown process kills bash, you can keep watching.
+    Doesn't seem to work.  Perhaps "cat" gets killed right away.
+    Something like this?:  shutdown -r now; kill screendoor.sh; exec cat /dev/tty*
+
+
 
 ***  Can we do without writing/reading variables to a file, and simply "export" and read the variables?  ...and if not in all circumstances, and we do this at least for one or two of the variables?
 
