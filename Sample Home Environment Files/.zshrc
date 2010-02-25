@@ -4,6 +4,13 @@
 #
 # Git: http://github.com/write2david/screendoor
 
+watch=( all )
+WATCHFMT='At %T on %W, %n has %a %l from %M.'
+LOGCHECK=10
+# More info:   man zshparam  /  search for "watch"
+# Enables you to see recent logins by typing:  log
+
+
 precmd() {
 
 # from http://pthree.org/2008/11/23/727/
