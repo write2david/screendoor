@@ -50,6 +50,15 @@ GNU Screen, by itself, is not "enabled" for each terminal that is created. Simpl
 
 
 
+==DEPENDENCIES==
+
+Screendoor requires the following:
+	GNU Screen
+	BASH (normally already installed)
+	sleep (standard part of GNU "coreutils" package)
+
+
+
 ==USING SCREENDOOR==
 
 There are only TWO steps to begin using Screendoor:
