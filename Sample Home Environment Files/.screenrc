@@ -26,6 +26,8 @@
 #
 # ^A t // display the current time, date, and loadavg of the machine
 #
+# ^A :fit  //  Screen command to readjust Screen if you resize a xterm window, for example.  This command is needed because screen doesn't adapt the window size automatically if the window is displayed more than once.
+#
 # split display    C-a S     //  One press splits the display into halves; a second press splits it into thirds, a third into fourths, and so on. 
 #
 #Newly spawned regions are empty; switch the input focus to one with C-a TAB and then select a window for it to display. 
