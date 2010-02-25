@@ -14,6 +14,10 @@ Man Pages:
 	gittutorial
 	gittutorial-2
 
+Revision Control Systems, Distributed vs. Centralized:
+	http://en.wikipedia.org/wiki/Distributed_revision_control
+	http://git.wiki.kernel.org/index.php/GitSvnComparison
+	http://hginit.com/00.html
 
 
 ======GUI PROGRAMS=======
@@ -21,6 +25,68 @@ gitk
 gitk --all
 qgit4
 git-gui or git gui
+
+
+======YET TO ORGANIZE=======
+
+git config --global user.name "Rupert Monkey"
+git config --global user.email rupert@example.com
+
+
+
+For a list of the available tags for a given project:
+
+git tag -l
+
+
+
+git pull --rebase
+When you pull, you will notice a summary of the changes transferred (updated/new branches and tags) and a diffstat of the changes applied to your working copy. If you have local commits then the --rebase option will ensure that your local commits will first be removed temporarily, then the new changes from the remote git repository are fetched and applied, after which your local commits are reapplied on top of the new changes. If you do not use --rebase and you have local commits, your local commits will be merged with the new changes introducing a new commit which is often undesired.
+
+
+
+git push --dry-run
+git push
+
+
+If you do not pull before pushing, and changes have occurred that you never pulled, you may receive an error when you try to push. So, it is always best to pull before you push.
+
+Git, by default, pushes all the local branches which exist also in the remote repository.
+
+
+
+Committing on behalf of a contributor:  When committing code on behalf of others use the --author option, e.g.:
+	git commit -a --author "Joe Coder <joe@coder.org>"
+
+
+
+Undo Changes:
+	Undo anything you put in the index:  git reset HEAD
+	Undo anything in the workind directory:   git checkout HEAD
+
+
+
+Alias commands: You can define new git commands using the alias configuration. For example, to define "git up" do:
+	git config --global alias.up "pull --rebase"
+
+
+
+Rewriting history
+	 Say, you spend an evening implementing a feature. The session may generate 10 commits. After you are done, you see that some of the previous commits were buggy and the newer commits fix bugs introduced by them. Those commits would look better if they didn't have the bug to begin with. Or you may want to reorder commits to group them more logically by what they do. Or you may just want to improve the commit messages before making the changes public
+
+The interactive rebase command is your friend. If you want to edit / reorder / squash-into-one the last five commits, do:
+
+git rebase -i HEAD~5
+
+
+That will bring up an editor page with the last five commits listed. You can reorder the lines to reorder the commits. Or change the word at the beginning of the line to get a chance to edit the commit, or squash it (ie. merge it) into the commit before it.
+
+git format-patch
+
+
+
+If you are the one that gets sent a 'patch', then you can apply the commit in the patch with the following command:
+	git am [patch]
 
 
 
@@ -123,7 +189,12 @@ merge and git revert, and with the norms of other major opensource projects.
 
 > Commits should be something that someone might want to patch or revert in its entirety, and never piecewise. If it could be useful in pieces, make separate commits. This will result in short, clear, and concise commit messages.
 
-Getting in the habit of creating quality commit messages makes using and collaborating with Git a lot easier. As a general rule, your messages should start with a single line that's no more than about 50 characters and that describes the changeset concisely, followed by a blank line, followed by a more detailed explanation.
+Getting in the habit of creating quality commit messages makes using and
+collaborating with Git a lot easier. As a general rule, your messages should
+start with a single line that's no more than about 50 characters and that
+describes the changeset concisely, followed by a blank line, followed by a
+more detailed explanation.  If the more detailed explanation is multi-line,
+wrap each line at about 722 characters.
 
 
 
