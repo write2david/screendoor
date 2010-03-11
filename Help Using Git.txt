@@ -9,6 +9,7 @@ Git Community Book:
 Git Cheat Sheets:
 	http://cheat.errtheblog.com/s/git/
 	http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
+	www-cs-students.stanford.edu/~blynn/gitmagic/book.pdf
 
 Man Pages:
 	gittutorial
@@ -347,9 +348,10 @@ After merging, if you delete the branch, it's still available in the remaining b
 
 git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
 git checkout -- [name of file]   = add or replace [file] from repo into working directory
-git checkout [SHA-1]  = Examine an earlier version of your source
-git checkout [SHA-1 of tree-ish: a tree, commit, or tag] [name of file]  = checkout file from certain tree
-	[good to do "git log [filename]" first to find out which tree]
+git checkout [SHA-1]  = put this SHA-1 revision into your working directory
+git checkout [SHA-1 of a tree, commit, or tag] [name of file]  = checkout file from certain tree
+	[good to do "git log [filename]" first to find out which
+	revision/commit]
 
 
 ==MERGING BRANCHES==
