@@ -1,10 +1,33 @@
-TODO & BUG LIST
+SCREENDOOR TODO & BUG LIST
 
 
-*** SSH-ing from one system running screendoor to another system running screendoor does the normal nested-screen-session deal, but in the top-level (local) session, it also seems to add the bottom-level (remove) session's list of windows.  An odd bug/feature.
+==MAJOR ISSUES (fix before next release) ==
+
+
+*** Most of the time, calling Screendoor places the user in the "Cornerstone" window.
+	And then when Screendoor is called again, the terminal that was viewing the "Cornernstone" window is the moved to the correct window.
 
 
 *** The X-forwarding doesn't seem to be working.   Test on x-ming.   Doesn't work from work, I get:   "generic event extension missing"
+
+
+***  Does screendoor work fine when using it in a non-root account?
+
+
+***  With multiuser on, can non-root accounts connect to a screendoor session owned by root?
+
+
+
+==MINOR ISSUES (address them at some point) ==
+
+
+***  Can we do without writing/reading variables to a file, and simply "export" and read the variables?  ...and if not in all circumstances, and we do this at least for one or two of the variables?
+
+
+***  Rather than checking if parent process = screen, would it be better if we check of the $TERM variable = screen?
+
+
+*** SSH-ing from one system running screendoor to another system running screendoor does the normal nested-screen-session deal, but in the top-level (local) session, it also seems to add the bottom-level (remove) session's list of windows.  An odd bug/feature.
 
 
 
@@ -15,9 +38,29 @@ source ~/screendoor.sh --call-from-shell
         .....which then does the new if-file-exists test I have written on paper
 
 
-***  Does screendoor work fine when using it in a non-root account?
+***  Possibly: Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
+	Cornerstone is mostly needed to ensure multiuser?  If so, this this line of screenrc, which can be overwritten:
+	multiuser off      (or on)
 
-***  With multiuser on, can non-root accounts connect to a screendoor session owned by root?
+	Perhaps I don't need to have the "Cornerstone" window held open all the time, it can recreated each time it's needed.
+
+
+
+***  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.
+	Seems that the messages are sent to /dev/ttyS0.
+	cat /dev/ttyS0   --  this will catch them and display them
+	so maybe the "shutdown" command needs to be "shutdown && cat /dev/ttyS0"
+
+
+	WAIT, this is actually normal behavior, I believe.
+		The shutdown messages are visible when you are sitting at the terminal.
+		But not when using GNU screen remotely over SSH.
+
+For shutdown, do script?:  shutdown %1 && exec cat /dev/ttyS0
+    This way, watching the shutdown message won't need bash (or other shell) running, so that when shutdown process kills bash, you can keep watching.
+    Doesn't seem to work.  Perhaps "cat" gets killed right away.
+    Something like this?:  shutdown -r now; kill screendoor.sh; exec cat /dev/tty*
+
 
 
 ***  Add the "Entering GNU Screen, press any key to cancel."
@@ -61,35 +104,3 @@ session.'
 
 
 	Comment them both out, and add a line "Uncomment to enable message."
-
-
-
-***  Possibly: Remove need for "Cornerstone" window, or make it optional and disabled (commented-out) by default.
-	Cornerstone is mostly needed to ensure multiuser?  If so, this this line of screenrc, which can be overwritten:
-	multiuser off      (or on)
-
-	Perhaps I don't need to have the "Cornerstone" window held open all the time, it can recreated each time it's needed.
-
-
-
-***  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.
-	Seems that the messages are sent to /dev/ttyS0.
-	cat /dev/ttyS0   --  this will catch them and display them
-	so maybe the "shutdown" command needs to be "shutdown && cat /dev/ttyS0"
-
-
-	WAIT, this is actually normal behavior, I believe.
-		The shutdown messages are visible when you are sitting at the terminal.
-		But not when using GNU screen remotely over SSH.
-
-For shutdown, do script?:  shutdown %1 && exec cat /dev/ttyS0
-    This way, watching the shutdown message won't need bash (or other shell) running, so that when shutdown process kills bash, you can keep watching.
-    Doesn't seem to work.  Perhaps "cat" gets killed right away.
-    Something like this?:  shutdown -r now; kill screendoor.sh; exec cat /dev/tty*
-
-
-
-***  Can we do without writing/reading variables to a file, and simply "export" and read the variables?  ...and if not in all circumstances, and we do this at least for one or two of the variables?
-
-
-***  Rather than checking if parent process = screen, would it be better if we check of the $TERM variable = screen?
