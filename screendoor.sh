@@ -280,17 +280,17 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 		# If we go with "prev" and comment-out the later line containing "-x -p" (meaning switch to the new window)...
 			# so that we see the effect of the next line but without switching to the new window
 			# then we see the difference b/t "other" and "prev"
-	screen -S Screendoor -X prev
+	screen -S Screendoor -X other
 
 	# Sleep to make sure everything catches up:
 	sleep 0.2
 
 	# Use "-x" to attached to the window named [content of screen.uniqueID.txt]:
-	# Remember that though we are attaching here, we have already created the new window, which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
+	# Remember that we are now *attaching* to the new window; we have already *created* the new window (about 4 commands up from this line), which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
 	# Now we actually connect to the new window.
 		# We can add "exec" so that this bash script dies and we are just left with the new window.
 		# Otherwise we have end up with bash processes living in the background.
-	exec screen -S Screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`"
+		exec screen -S Screendoor -x
 
 	# Regarding the preceding line: We are now connected to the new Screen window, so we don't need the file that tells us how to name that window.
         # We're putting the "rm" command at the last possible place.
