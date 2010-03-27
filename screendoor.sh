@@ -263,14 +263,8 @@ else
 echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 
-# In case two logins happen during the same minute or second, milliseconds is also used in naming the windows, in order to make sure each window name is unique (needed for the section of code that writes/recalls the window title).  Later, the milliseconds part of the window title will be removed, after the uniqueness becomes unneeded.
-
-	# Dump the date/time to a file -- it will be used as the name of the screen window.
-	# Use milliseconds to ensure unique name since we will need to specify a unique name for subsequent commands, especially if this script is executed twice in the same second. 
-	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt
-
-	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window named [content of screen.uniqueID.txt]:
-	screen -S Screendoor -X screen -t "`cat ~/screen.uniqueID.txt`"
+	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window...
+	screen -S Screendoor -X screen
 
 	# Sleep to make sure everything catches up:
 	sleep 0.2
@@ -285,27 +279,14 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 	# Sleep to make sure everything catches up:
 	sleep 0.2
 
-	# Use "-x" to attached to the window named [content of screen.uniqueID.txt]:
+	# Use "-x" to attached to the last-created window:
 	# Remember that we are now *attaching* to the new window; we have already *created* the new window (about 4 commands up from this line), which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
 	# Now we actually connect to the new window.
 		# We can add "exec" so that this bash script dies and we are just left with the new window.
 		# Otherwise we have end up with bash processes living in the background.
 		exec screen -S Screendoor -x
 
-	# Regarding the preceding line: We are now connected to the new Screen window, so we don't need the file that tells us how to name that window.
-        # We're putting the "rm" command at the last possible place.
-        		# Doing so earlier would create problems since it is needed later (that is, here).
-        		# Doing so later means it wouldn't happen until this part returns (which it doesn't yet, since there is an "exec" command).
-        		# Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section then *attaches* to the new window.
-	     # Use "-f" on rm b/c using > /dev/null doesn't work
-		  # Kill output of the rm command since if the window was created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file, and any output would mess up our specification of the window name.
 fi
-
-
-
-#seems like sometimes another "exit" is needed:
-exit
-
 
 
 
