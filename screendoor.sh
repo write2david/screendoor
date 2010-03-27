@@ -1,12 +1,15 @@
 #!/bin/bash
 
 
-# Latest version is available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
+# Latest version of this software is available for download at:  http://github.com/write2david/screendoor/blob/master/screendoor.sh
 #      Or for easy wget'ing:  www.tinyurl.com/get-screendoor
 #
-# Git: http://github.com/write2david/screendoor
+# Git Access:  git://github.com/write2david/screendoor.git
 #
-# Why? http://tech.thedesignhut.net/gnu-screen
+# Git Web Access: http://github.com/write2david/screendoor
+#
+# README (including installation instructions) for this software is available on Git Web Access site (above)...
+#      ...and also at:  http://github.com/write2david/screendoor/raw/master/README
 
 
 
@@ -15,38 +18,55 @@
 
 
 
-
-# NOTE:
-# This file gets run every time a shell starts (which includes every time screen starts)
-# So, if screen is already running (that is, if the parent process of this script is "screen" -- the line above tests this), then we just connect to the already-created window
-# Login -> shell startup script -> run Screendoor (setup Cornerstone and new window) -> [start screen] -> prompts new shell -> shell startup script (which prompts running this file, now going down to this section) -> Screendoor connects to new window
+# OVERVIEW OF HOW SCREENDOOR WORKS:
+#
+# When this script is called by shell login files (which includes every time screen starts), then there are two scenarios:
+# (Option #1) If the parent process of this script is "screen" then we just connect to the already-created window.
+#
+# (Option #2) Otherwise, we create a Screen window, which creates a shell within that window -- a shell which will then call Screendoor again, and so this second instance of Screendoor just dumps to that new shell (Option #1, above).
+#       Option #2 looks like:
+#             User Login ->
+#             Shell startup script ->
+#             Run Screendoor (setup Screendoor session and two windows: Cornerstone and new window) ->
+#             That new window prompts a new shell ->
+#             Shell startup script (which prompts running this file, now going down to this section) ->
+#             Screendoor connects to new window.
+#
+#
+# NOTES
 #
 # Often, sleep commands (to delay 1/5 of a second) are inserted because the screen commands often "return" *immediately* AND there is another screen command immediately following which depends on the the first sleep command *completing*.  So, we want to make sure it completes (even a screen command as simple as setting a title can return immediately, and if the next command references a window with that title, that next command may not work because the "set title" command returned immediately without having yet set the title).
-#
-# When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
+
 
 
 
 # FIRST, TEST FOR INTERACTIVE SHELL
-#      ...AND EXIT IF NOT INTERACTIVE.
+#      ...AND EXIT SCREENDOOR IF NOT INTERACTIVE.
 #
 #    -- No need for screen if the user won't be interacting with the shell.
 #    -- This also prevents screen from running when it would confuse another program (like scp) that doesn't use an interactive shell.
 #    -- For more info, see:
 #            http://theory.uwinnipeg.ca/localfiles/infofiles/bash/bashref_54.html)
 #            http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_01_02.html#sect_01_02_02_03
+#
+# NOTE: When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
+
 
          if [[ $- != *i* ]] ; then
          # Shell is non-interactive.  Be done now!
-         return   # use 'return', not 'exit', since we just want to prevent execution of further code in this script, not exit the non-interactive shell and thus mess up the program that needed it / spawned it 
+         return
+         # use 'return', not 'exit', since we just want to prevent execution of further code in this script, not exit the non-interactive shell and thus mess up the program that needed it / spawned it   (like scp or WinSCP). 
          fi
+         # So now continue if the shell is interactive... 
 
 
 
 # SECOND, CHECK FOR DUMB TERMINAL LOGIN
-#      ...AND EXIT IF NOT INTERACTIVE.
+#      ...AND EXIT SCREENDOOR IF IT'S A DUMB-Y
 #
-# This checks to see if something like WinSCP is logging in.  WinSCP definitely doesn't like it when SCREEN runs while it's logging in.
+# This checks to see if something like WinSCP is logging in.
+# WinSCP definitely doesn't like it when GNU Screen runs while WinSCP is trying to log in.
+#
 case ${TERM} in
         dumb)
 	return     ;;
@@ -56,42 +76,45 @@ case ${TERM} in
 
 
 # THIRD, CLEAR OUT OLD, DEAD SCREEN SESSIONS
-#      ...like those that were leftover when the computer was unexpectantly shutdown.
+#      ...like those that were leftover when the computer unexpectantly loses power.
+#      Screendoor (well, GNU Screen itself, actually) won't start right if a dead, old session is leftover with the same session name.
 screen -wipe > /dev/null 
 
 
 
-# FOURTH, START MAIN SCREEN SESSION (NAMED "Screendoor")
+# FOURTH, START MAIN SCREEN SESSION, NAMED "Screendoor"
 #        ...if not already started.
 #
 	if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
-		# That is, if there is no screen session named "Screendoor", then...
+   # That is, if there is no screen session named "Screendoor", then...
+	# we will setup our main screen session (named "Screendoor") with "Cornerstone" window
 	#
 	#
-	# Setup main screen session (named "Screendoor") with "Cornerstone" window
-	# We don't want the "Cornerstone" window to be a bash shell, since that would trigger .bashrc and .bash_login.  
-	# So, when setting up the initial session, run sleep (instead of specifying nothing)
-	#(specifying nothing = run bash).
+	# We don't want the "Cornerstone" window to be a shell, since that would trigger the shell login files (like .bashrc and .bash_login), which would then call Screendoor again. So, when setting up the initial window, run "sleep" (instead of specifying nothing, because specifying nothing = "run bash".
 	# 
-	#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
+	#  Here comes a big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
 	#
-	#  Start session "Screendoor."  From screen man page for the command "-d -m": "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."  Name the first window "Cornerstone."
+	# First, start session "Screendoor."
+	# From the GNU Screen manpage: "-d -m" means "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."
+	#
 	echo 'Starting GNU Screen session named "Screendoor"...'
 	# Create new session named "Screendoor" with the first window titled "NewWindow"
-		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediate name it that way
-			# because then if we do "Ctrl-A c" to create a new window, it will create it named "Cornerstone" (which would be the default)
+		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediately name it that way
+			# because then it will be the default name for new windows, so that if we later do "Ctrl-A c" to create a new window, it will create it named "Cornerstone".  We don't want all new windows to be named "Cornerstone," only just this fist one.
 	screen -S Screendoor -d -m -t NewWindow sleep 99999999999d && \
+	#
 	# Rename the window title...	
 	sleep 0.2 && screen -S Screendoor -p0 -X title Cornerstone && \
-	# Write s message on the Cornerstone window using the "stuff" screen command
+	#
+	# Write a message on the Cornerstone window using the "stuff" screen command
 	# \015 is octal ASCII code for carriage return.
 		# Need to use 'eval' so that the text \015 isn't printed literally
 		# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
-	# Commenting out next line, trying to make the message into a 1-liner
-	#sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "This is a read-only window (titled \"Cornerstone\") created in order to hold open this central screen session (named \"Screendoor\"). \015"' && \
 	sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "   [ This window holds open the central Screendoor session. ] \015"' && \
+	#
 	# Set the session as "multiuser"
 	sleep 0.2 && screen -S Screendoor -X multiuser on && \
+	#
 	# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
 	sleep 0.2 && screen -S Screendoor -X aclchg \* -w 0
 	fi
@@ -99,8 +122,8 @@ screen -wipe > /dev/null
 
 
 # FIFTH, SETUP AN IF/ELSE SCENARIO...
-#	IF this script was called by GNU Screen
-#	ELSE this scrip was not called by GNU Screen
+#	IF this script was called by GNU Screen, then everything is setup already. Basically just dump to a command line.
+#	ELSE this script was not called by GNU Screen, then setup a new Screen window.
 
 
 
@@ -244,31 +267,33 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 # In case two logins happen during the same minute or second, milliseconds is also used in naming the windows, in order to make sure each window name is unique (needed for the section of code that writes/recalls the window title).  Later, the milliseconds part of the window title will be removed, after the uniqueness becomes unneeded.
 
 
-#  Big multi-line command, using "\" to do multi-line and "&&" to string commands together...
+#  Big multi-line command, using "\" to do multi-line and "&&" to string multiple commands together...
+#
 	#
-	# Dump the date/time to a file, will be used to name the screen window.
+	# Dump the date/time to a file -- it will be used as the name of the screen window.
+	# Use milliseconds to ensure unique name since we will need to specify a unique name for subsequent commands, especially if this script is executed twice in the same second. 
 	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
 	#
-	# Use "-X" to send a command and then immediately return.  The command is: create a new window on central "Screendoor" session named [content from file]:
+	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window named [content of screen.uniqueID.txt]:
 	screen -S Screendoor -X screen -t "`cat ~/screen.uniqueID.txt`" && \
 	#
-	# sleep to make sure everything catches up:
+	# Sleep to make sure everything catches up:
 	sleep 0.2 && \
 	#
-	# Creating the new window caused all the other screens to move ahead one, so move them all back:
+	# Creating the new window caused all the other Screen instances to move ahead to the next window, so move them all back:
 	screen -S Screendoor -X prev && \
 	#
 	# Sleep to make sure everything catches up:
 	sleep 0.2 && \
 	#
-	# Use "-x" to attached to the window named [content from file]:
-	# Remember that though we are attaching here, we are already initiated new window, which itself has called this script and goes through the "Creating new GNU Screen window" section near the top.
+	# Use "-x" to attached to the window named [content of screen.uniqueID.txt]:
+	# Remember that though we are attaching here, we have already created the new window, which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
 	# Now we actually connect to the new window.  We can add "exec" so that this bash script dies and we are just left with the new window.
 	exec screen -S Screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`"
-# We are now in the new (properly-named) screen window, so we don't need the file that tells us how to name the window.  Kill output of the rm command since if created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file
-        # We're putting the "rm" command at the last possible place.  Doing so earlier would mean that it would be needed later.  Doing so later means it wouldn't happen until this part returns (which it doesn't yet, see section below about "above command is held up at...").  Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section *attaches* to the new window.
+# We are now connected to the new Screen window, so we don't need the file that tells us how to name that window.
+        # We're putting the "rm" command at the last possible place.  Doing so earlier would create problems since it is needed later (that is, here).  Doing so later means it wouldn't happen until this part returns (which it doesn't yet, see section below about "above command is held up at...").  Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section *attaches* to the new window.
 	        # Use "-f" on rm b/c using > /dev/null doesn't work
-		 
+		     # Kill output of the rm command since if the window was created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file, and any output would mess up our specification of the window name.
 fi
 
 
