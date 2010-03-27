@@ -92,32 +92,32 @@ screen -wipe > /dev/null
 	#
 	# We don't want the "Cornerstone" window to be a shell, since that would trigger the shell login files (like .bashrc and .bash_login), which would then call Screendoor again. So, when setting up the initial window, run "sleep" (instead of specifying nothing, because specifying nothing = "run bash".
 	# 
-	#  Here comes a big multi-line command, using "\" to do multi-line and "&&" to string commands together. 
 	#
 	# First, start session "Screendoor."
 	# From the GNU Screen manpage: "-d -m" means "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."
-	#
-	echo 'Starting GNU Screen session named "Screendoor"...'
-	# Create new session named "Screendoor" with the first window titled "NewWindow"
-		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediately name it that way
-			# because then it will be the default name for new windows, so that if we later do "Ctrl-A c" to create a new window, it will create it named "Cornerstone".  We don't want all new windows to be named "Cornerstone," only just this fist one.
-	screen -S Screendoor -d -m -t NewWindow sleep 99999999999d && \
-	#
-	# Rename the window title...	
-	sleep 0.2 && screen -S Screendoor -p0 -X title Cornerstone && \
-	#
-	# Write a message on the Cornerstone window using the "stuff" screen command
-	# \015 is octal ASCII code for carriage return.
-		# Need to use 'eval' so that the text \015 isn't printed literally
-		# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
-	sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "   [ This window holds open the central Screendoor session. ] \015"' && \
-	#
-	# Set the session as "multiuser"
-	sleep 0.2 && screen -S Screendoor -X multiuser on && \
-	#
-	# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
+	
+echo 'Starting GNU Screen session named "Screendoor"...'
+# Create new session named "Screendoor" with the first window titled "NewWindow"
+	# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediately name it that way
+		# because then it will be the default name for new windows, so that if we later do "Ctrl-A c" to create a new window, it will create it named "Cornerstone".  We don't want all new windows to be named "Cornerstone," only just this fist one.
+	screen -S Screendoor -d -m -t NewWindow sleep 99999999999d
+	
+# Rename the window title...	
+	sleep 0.2 && screen -S Screendoor -p0 -X title Cornerstone
+	
+# Write a message on the Cornerstone window using the "stuff" screen command
+# \015 is octal ASCII code for carriage return.
+	# Need to use 'eval' so that the text \015 isn't printed literally
+	# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
+	sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "   [ This window holds open the central Screendoor session. ] \015"'
+	
+# Set the session as "multiuser"
+	sleep 0.2 && screen -S Screendoor -X multiuser on
+	
+# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
 	sleep 0.2 && screen -S Screendoor -X aclchg \* -w 0
-	fi
+
+fi
 
 
 
