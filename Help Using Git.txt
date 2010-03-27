@@ -20,6 +20,9 @@ Revision Control Systems, Distributed vs. Centralized:
 	http://git.wiki.kernel.org/index.php/GitSvnComparison
 	http://hginit.com/00.html
 
+Quality Tutorials:
+	http://utsl.gen.nz/talks/git-svn/intro.html
+
 
 ======GUI PROGRAMS=======
 gitk
@@ -152,7 +155,7 @@ git add .  = add, recursively, all files
 git add *  or   git add *.txt  =  Fileglobs (e.g. *.c) can be given to add all matching files.
 
 
-git add -u  = Tell git to remove files that are deleted in file system but not yet removed from index (instead of git rm on all of them)
+git add -u  = Update only files that git already knows about, staging modified content for commit and marking deleted files for removal.  So, this includes telling git to remove files that are deleted in file system but not yet removed from index (instead of git rm on them).
 
 
 
