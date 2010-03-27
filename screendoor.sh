@@ -252,7 +252,6 @@ else
 
 # NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
 
-
 # Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
 # the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
 # bash shell, but when that bash shell creates/connects to a new screen window,
@@ -266,31 +265,28 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 # In case two logins happen during the same minute or second, milliseconds is also used in naming the windows, in order to make sure each window name is unique (needed for the section of code that writes/recalls the window title).  Later, the milliseconds part of the window title will be removed, after the uniqueness becomes unneeded.
 
-
-#  Big multi-line command, using "\" to do multi-line and "&&" to string multiple commands together...
-#
-	#
 	# Dump the date/time to a file -- it will be used as the name of the screen window.
 	# Use milliseconds to ensure unique name since we will need to specify a unique name for subsequent commands, especially if this script is executed twice in the same second. 
-	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt && \
+	echo -n "`date +%m/%d\ @\ %I:%M%p\ \ \ \(%N\)`" > ~/screen.uniqueID.txt
 	#
 	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window named [content of screen.uniqueID.txt]:
-	screen -S Screendoor -X screen -t "`cat ~/screen.uniqueID.txt`" && \
+	screen -S Screendoor -X screen -t "`cat ~/screen.uniqueID.txt`"
 	#
 	# Sleep to make sure everything catches up:
-	sleep 0.2 && \
+	sleep 0.2
 	#
 	# Creating the new window caused all the other Screen instances to move ahead to the next window, so move them all back:
-	screen -S Screendoor -X prev && \
+	screen -S Screendoor -X prev
 	#
 	# Sleep to make sure everything catches up:
-	sleep 0.2 && \
+	sleep 0.2
 	#
 	# Use "-x" to attached to the window named [content of screen.uniqueID.txt]:
 	# Remember that though we are attaching here, we have already created the new window, which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
 	# Now we actually connect to the new window.  We can add "exec" so that this bash script dies and we are just left with the new window.
 	exec screen -S Screendoor -x -p "`cat ~/screen.uniqueID.txt && rm -f ~/screen.uniqueID.txt`"
-# We are now connected to the new Screen window, so we don't need the file that tells us how to name that window.
+
+	# Regarding the preceding line: We are now connected to the new Screen window, so we don't need the file that tells us how to name that window.
         # We're putting the "rm" command at the last possible place.  Doing so earlier would create problems since it is needed later (that is, here).  Doing so later means it wouldn't happen until this part returns (which it doesn't yet, see section below about "above command is held up at...").  Doing so in top section means it would be deleted when new window is created (which sounds good) but it's still actually needed when this section *attaches* to the new window.
 	        # Use "-f" on rm b/c using > /dev/null doesn't work
 		     # Kill output of the rm command since if the window was created with "Ctrl-A c" then there is not going to be a screen.uniqueID.txt file, and any output would mess up our specification of the window name.
