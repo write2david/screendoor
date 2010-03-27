@@ -361,6 +361,15 @@ git checkout [SHA-1 of a tree, commit, or tag] [name of file]  = checkout file f
 
 git merge [branch] = merge [branch] into your master branch
 
+git merge <branch> --no-commit
+  merge branch <branch> into the current branch, but do not autocommit the
+  result; allows you to make further tweaks
+
+git merge [branch] --no-commit --no-ff
+
+git reset --hard HEAD = Undoing a merge. If you get stuck and decide to just give up and throw the whole mess away, you can always return to the pre-merge state with
+
+$ git reset --hard ORIG_HEAD = Or, if you've already committed the merge that you want to throw away.
 
 git cherry-pick rev = Aside from merging, sometimes you want to just pick one commit from a different branch. To apply the changes in revision rev and commit them to the current branch use cherry-pick.
 
@@ -567,13 +576,10 @@ git rebase --interactive COMMIT_ID
 COMMIT_ID should be the one BEFORE you want to fiddle with.
 
 
-
-
-
-
-
 To combine revision 3 and 4 into a single revision, you can use git rebase. If you want to remove the changes in revision 3, you need to use the edit command in the interactive rebase mode. If you want to combine the changes into a single revision, use squash.
 
+git rebase --abort
+	//  kills the rebase process
 
 
 
