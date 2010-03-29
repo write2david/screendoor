@@ -170,8 +170,6 @@ then
 	# Either way, rename it to the date and time.  We don't need the milliseconds anymore
 		# since we don't need an absolutely unique window name.
 
-	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
-
 	echo 'Starting a new window in GNU Screen...'
 	echo
 
@@ -224,6 +222,9 @@ then
 	# Screendoor is written in bash, so at this point we are leaving the user in a bash shell.  Bash may not be the user's default login shell.  So, replace (using exec) the bash session (we still stay inside this screen window) with the default login shell.
 
 	# Need to add test for default login shell, for now we just assume zsh:
+
+	sleep 1
+	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
 	exec zsh
 
 	# Work on detecting user's default login shell, and executing that.
@@ -262,29 +263,39 @@ else
 
 echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
+	#echo "creating a new window in the session"
 
 	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window...
 	screen -S Screendoor -X screen
-
+	
 	# Sleep to make sure everything catches up:
-	sleep 0.2
+	#sleep 0.2
+	#sleep 4
 
-	# Creating the new window caused all the other Screen instances to move ahead to the next window, so move them all back:
+	# Creating the new window ONE of other Screen instances to move ahead to the next window, so move it back:
 		# We can choose between the "other" command and the "prev" command.
 		# If we go with "prev" and comment-out the later line containing "-x -p" (meaning switch to the new window)...
 			# so that we see the effect of the next line but without switching to the new window
 			# then we see the difference b/t "other" and "prev"
+	#echo "moving all windows back to OTHER"
 	screen -S Screendoor -X other
 
+	#screen -S Screendoor -X select NewWindow
+
+
 	# Sleep to make sure everything catches up:
-	sleep 0.2
+	#sleep 0.2
+	#sleep 4
+
 
 	# Use "-x" to attached to the last-created window:
 	# Remember that we are now *attaching* to the new window; we have already *created* the new window (about 4 commands up from this line), which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
 	# Now we actually connect to the new window.
 		# We can add "exec" so that this bash script dies and we are just left with the new window.
 		# Otherwise we have end up with bash processes living in the background.
-		exec screen -S Screendoor -x
+		#echo "exec'ing a connection to the session"
+		#sleep 4
+		exec screen -S Screendoor -x -p NewWindow
 
 fi
 
