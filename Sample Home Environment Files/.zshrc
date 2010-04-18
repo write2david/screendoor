@@ -1,19 +1,24 @@
-# Latest version available for download at:  http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.zshrc
+# Latest version available for download at:
+#    http://github.com/write2david/screendoor/raw/master/Sample%20Home%20Environment%20Files/.zshrc
 #
 #    Or, for easy wget'ing:  www.tinyurl.com/get-screendoor-zshrc
 #
 # Git: http://github.com/write2david/screendoor
 
+
+# Info on zsh startup files: http://zsh.sourceforge.net/Guide/zshguide02.html
+
+
 watch=( all )
 WATCHFMT='At %T on %W, %n has %a %l from %M.'
 LOGCHECK=10
-# More info:   man zshparam  /  search for "watch"
+# More info on the above 3 lines:   man zshparam  /  search for "watch"
 # Enables you to see recent logins by typing:  log
 
 
 precmd() {
 
-# from http://pthree.org/2008/11/23/727/
+# this section comes from http://pthree.org/2008/11/23/727/
 # check if jobs are executing
 # must put in the chpwd() so that runs before each new command prompt
 
@@ -55,13 +60,14 @@ zstyle ':completion::complete:*' use-cache 1
 # -----------------------------------------------
 
 EDITOR=vim
-RSYNC_RSH=/usr/bin/ssh
 FIGNORE='.o:.out:~'
-DISPLAY=:0.0
 MAIL=$HOME/.maildir
 MAILPATH=$HOME/.maildir
 MAILCHECK=60
 SHELL=/bin/zsh
+
+# The next line is temporary, see note on about line 231 of screendoor.sh
+export DISPLAY=`cat ~/screen.xDISPLAY.txt`
 
 # colored filename/directory completion
 # Attribute codes:
