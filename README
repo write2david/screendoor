@@ -57,8 +57,8 @@ GNU Screen, after installing it, is not "enabled" for each terminal that is crea
 
 	The "Screendoor" session contains a window named "Cornerstone" simply to hold the session open ("Cornerstone" is a blank, non-writable window, showing a short notice, and is held open with a long "sleep" command).
 
-	Screendoor is written as a BASH script and contains a fair amount of commenting throughout the source code.  It deals with Screen-related issues such as: responding to logins initiated by programs like SCP or X-Forwarding-Over-SSH (including Xming), wiping dead Screen sessions, X-Windows running from within Screen and xTerms running within X-Windows, etc.
-	Though written in BASH, Screendoor honors whatever default shell the user has, and will drop the user into their default shell after Screendoor is called.
+	Screendoor is written as a BASH script and contains a fair amount of commenting throughout the source code.  It deals with Screen-related issues such as: responding to logins initiated by programs like SCP, automatically setting up the $DISPLAY variable for terminal logins that have X-Forwarding-Over-SSH enabled (including Xming), wiping dead Screen sessions, X-Windows running from within Screen with xTerms running within X-Windows, etc.
+	Though written in BASH, Screendoor honors whatever default shell the user has [this feature not yet implemented], and will drop the user into their default shell after Screendoor is called.
 
 
 Screendoor requires the following:
