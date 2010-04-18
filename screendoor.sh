@@ -162,19 +162,40 @@ if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 
 then
 
-
-	# If the new screen window was created with a new SSH/login screen or new xterm tab,
-		# then it will have created a window that is already named.
-	# But if the new screen window was created with "Ctrl-A c" then it will be named
-		# the default "NewWindow".
-	# Either way, rename it to the date and time.  We don't need the milliseconds anymore
-		# since we don't need an absolutely unique window name.
-
+	# You may choose to comment out the following line
 	echo 'Starting a new window in GNU Screen...'
 	echo
 
 
-	# What this optional section does: grab the first three logins (most recent)
+	# If the ~/screen.xDISPLAY.txt exists, use it to set the $DISPLAY of this bash session to the $DISPLAY of the bash session that spawned us 
+		# It may not exist if this file is called w/"Ctrl-A c"
+		# See note below, which explains the creation of ~/screen.xDISPLAY.txt file. 
+	
+	if [ -f ~/screen.xDISPLAY.txt ]; then
+		export DISPLAY=`cat ~/screen.xDISPLAY.txt`
+
+
+
+		# Optional item to uncomment for all new shells:
+		#echo "(Note: Your \$DISPLAY variable for this shell and any new shells that you spawn (like Ctrl-A c) from it is...  $DISPLAY )"
+		
+		
+		# Optional section to comment out, for only new shells that don't have the normal DISPLAY (like, when using X-forwarding-over-SSH)
+           #if [ "$DISPLAY" != ":0.0" ]; then
+           #   echo "Note: Your \$DISPLAY variable for this shell and any new shells that you spawn (like Ctrl-A c) from it is...  $DISPLAY"
+           # 	echo
+           # fi
+
+		#if ["$DISPLAY" != ":0.0"]; then
+		#	echo "(Note: Your \$DISPLAY variable now is...  $DISPLAY )"
+		#	fi
+		
+		
+		fi
+		
+
+
+	# What this next optional section does: grab the first three logins (most recent)
 	# produced by the "last" command. The first one is the current one,
 	# the second one is also the current one (since logging in starts 
 	# bash (next-most-recent login entry) and bash starts screen 
@@ -201,34 +222,49 @@ then
 	echo "Your current mail..."  &&  mail -H  &&  echo
 
 
-	# If the ~/screen.xDISPLAY.txt exists, use it.
-		# It may not exist if this file is called w/"Ctrl-A c"
-		# See note below, which explains the creation of ~/screen.xDISPLAY.txt file. 
-	if [ -f ~/screen.xDISPLAY.txt ]
-		then
-		export DISPLAY=`cat ~/screen.xDISPLAY.txt`
-		#echo "(Your X-windows \$DISPLAY variable now is...  $DISPLAY)"
-		fi
-		
-	
-	# A test: Try uncommenting next line, and then run Xming and then...
-		# See if xMing runs Terminal/Firefox/Gramps.
-		# Try using xMing to run Terminal, open a new tab in Terminal and run mousepad
-		# Do "Ctrl-A c" in Terminal and run mousepad.
-		# If all is good during this time the next line is uncommented, then leave it uncommented.
-	#rm -f ~/screen.xDISPLAY.txt
+
+	# If the new screen window was created with a new SSH/login screen or new xterm tab,
+		# then it will have created a window that is already named.
+	# But if the new screen window was created with "Ctrl-A c" then it will be named
+		# the default "NewWindow".
+	# Either way, rename it to the date and time.  We don't need the milliseconds anymore
+		# since we don't need an absolutely unique window name.
+
+
+	# Use a loop to delay the next part (of setting Screen window title) so that it will still be "NewWindow."
+		# Then after we transition the user to NewWindow (indicated by the existance of the screen.transition.ready file)
+		# we can change the title.
+	until [  -f ~/screen.transition.ready ]; do
+			echo We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user.
+         done
+   
+	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
+
+	# Don't need this file anymore:
+	#rm -f ~/screen.transition.ready
+	# Actually, we do need it, so I am commenting out the rm command.
+		# It is needed b/c the file doesn't exist if the user then does Ctrl-A c, and if it doesn't exist, then there will be an endless loop since it won't ever be created if the user did "Ctrl A c"
 
 
 	# Screendoor is written in bash, so at this point we are leaving the user in a bash shell.  Bash may not be the user's default login shell.  So, replace (using exec) the bash session (we still stay inside this screen window) with the default login shell.
-
 	# Need to add test for default login shell, for now we just assume zsh:
 
-	sleep 1
-	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
 	exec zsh
+	# if we are going to call zsh directly then we lose the environment variables (like $DISPLAY, which was set above, which is needed for proper X-forwarding, like with xming)
+	# So, until we get a better solution, we are adding in the above "export DISPLAY..." line to .zshrc  (about line 72)
+	
 
-	# Work on detecting user's default login shell, and executing that.
-	# A srart:
+
+	# Would be nice to have something like the following line in order to completely clean up:
+	#rm -f ~/screen.xDISPLAY.txt
+	# But since we are exec'ing zsh, this line would never get run.
+	# If we can get a line like this in, then test by running Terminal in x-ming, and then making sure you can mousepad/firefox/etc.
+		# And then see if you can do "Ctrl-A c" on that Terminal, and then run mousepad  (that is, does the environment variable remain?)
+	
+
+
+	# Work on detecting user's default login shell, and executing that (ONLY if it is not BASH, since we're already in BASH): 
+	# A start:
 	# grep -e `id -un`:x:`id -u`:`id -g` /etc/passwd
 	# Even better, because the above assumes shadow passwords ("x") and maybe not everyone has them:
 	# grep -e `id -un` /etc/passwd | grep `id -u`:`id -g`
@@ -265,6 +301,9 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 	#echo "creating a new window in the session"
 
+	# remove a file that may exist, so that it's existence can be used later
+	rm -f ~/screen.transition.ready
+
 	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window...
 	screen -S Screendoor -X screen
 	
@@ -295,6 +334,7 @@ echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 		# Otherwise we have end up with bash processes living in the background.
 		#echo "exec'ing a connection to the session"
 		#sleep 4
+		touch ~/screen.transition.ready
 		exec screen -S Screendoor -x -p NewWindow
 
 fi
