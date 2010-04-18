@@ -4,11 +4,9 @@ SCREENDOOR TODO & BUG LIST
 ==MAJOR ISSUES (fix before next release) ==
 
 
-*** Most of the time, calling Screendoor places the user in the "Cornerstone" window.
-	And then when Screendoor is called again, the terminal that was viewing the "Cornernstone" window is the moved to the correct window.
-
-
-*** The X-forwarding doesn't seem to be working.   Test on x-ming.   Doesn't work from work, I get:   "generic event extension missing"
+***  Honor whatever default shell (BASH, ZSH, etc) the user has.
+	Not only is this a good idea, but right now screendoor isn't fit for most people
+	since it calls "zsh" whenever it is run. 
 
 
 ***  Does screendoor work fine when using it in a non-root account?
@@ -46,7 +44,7 @@ source ~/screendoor.sh --call-from-shell
 
 
 
-***  Minor bug: cannot view messages dislayed during shutdown process, when using screendoor.
+***  Sometimes cannot view messages dislayed during shutdown process, when using screendoor.
 	Seems that the messages are sent to /dev/ttyS0.
 	cat /dev/ttyS0   --  this will catch them and display them
 	so maybe the "shutdown" command needs to be "shutdown && cat /dev/ttyS0"
