@@ -516,7 +516,32 @@ git checkout [the SHA-1 of the commit the deleted the file]~1 [filename]
 if accidentally committed a file that never was needed, or if you committed
 large binary files that are no longer needed, or if committed something now
 considered confidential, etc.)
-	[not sure how to do it]
+	see above, and also this:
+
+
+(from http://help.github.com/removing-sensitive-data/   //   see also: http://github.com/guides/completely-remove-a-file-from-all-revisions)
+
+
+git filter-branch --index-filter 'git update-index --remove Rakefile' master
+
+
+This command will run the entire history of the master branch and change any commit that involved the file Rakefile, and any commits afterwards.
+
+Note that git filter-branch only works on one branch at a time, so you may need to perform the cleanup on other branches as well. This could be problematic if the branch has a complex merge history.
+
+While git filter-branch rewrites the history for you, the objects will remain in your local repo until they’ve been dereferenced and garbage collected. If you are working in your main repo you might want to force these objects to be purged:
+	git reflog expire --all
+	git gc --aggressive --prune
+
+
+If you have been pushing your repo updates to a remote repo, do:
+	# git push --force --verbose --dry-run
+	# git push --force
+
+Be warned that force-pushing does not erase commits on the remote repo, it simply introduces new ones and moves the branch pointer to point to them. If you are worried about users accessing the bad commits directly via SHA1, you will have to delete the repo and recreate it. 
+
+BUT CHECK TO SEE IF THIS LAST PARAGRAPH IS ACCURATE (if not, notify GitHub) because the Git man page says this about '--force':
+     "This can cause the remote repository to lose commits; use it with care"
            
 
 
