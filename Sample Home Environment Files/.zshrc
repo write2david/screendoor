@@ -23,27 +23,38 @@ precmd() {
 # must put in the chpwd() so that runs before each new command prompt
 
    if [[ $(jobs | wc -l) -gt 0 ]]; then
-       echo "You have jobs running."
+       echo "\n(You have background jobs running. Type 'jobs' or 'fg' to view.)\n"
 	# put this notification in RPROMPT instead of an echo
 else
 	# Do nothing   
    fi
+
+
+# The next line changes the title of xterm window to be the title of the running program within xterm
+# Inspired by: http://www.davidpashley.com/articles/xterm-titles-with-bash.html
+#
+# This is Part #1 of the process; Part 2 is below, in the "preexec" section.
+
+  print -Pn "\e]0;%m:%~\a"
+
   }
 
 
-# if uncommenting the next section, the "precmd()" will override the above precms()
-# note that this next section probably conflicts with a .bash_login section that sets the terminal title
+preexec () {
 
-#  Show command in title bar  (from http://www.davidpashley.com/articles/xterm-titles-with-bash.html)
-# if [ "$SHELL" = '/bin/zsh' ]
-# then
-#    case $TERM in
-#         rxvt|*term*|screen)
-#         precmd() { print -Pn "\e]0;%m:%~\a" }
-#         preexec () { print -Pn "\e]0;$1\a" }
-#         ;;
-#    esac
-# fi
+# Next line changes GNU Screen "window title" to match the currently-running, or last-run, program.  See http://aperiodic.net/screen/title_examples  .  My ScreenDoor script sets the initial title (after default is automatically changed) to be the date and time -- not very useful, so the next line changes it to [name-of-program].
+ 
+  echo -ne "\ek${1%% *}\e\\"
+
+
+# Next line changes the title of xterm window to be the title of the running program within xterm
+# Inspired by: http://www.davidpashley.com/articles/xterm-titles-with-bash.html
+
+# This is Part #2 of the process; Part 1 is above, in the "precmd" section.
+ 
+ print -Pn "\e]0;$1\a" 
+
+}
 
 
 
