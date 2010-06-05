@@ -87,7 +87,11 @@
 #    (when the time changes while you are doing Ctrl-PgUp, it drops you back down to the bottom)
 #    And WITH the current window in GREEN
 #    Also, remove the "flags of the window" code  (%f)
-  caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
+#  caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw"
+#
+#
+#  **The same and above, but with the CPU load listed on right-hand side
+  caption always "%{= .w}%-Lw%20L>%{=b .g}%n %t%{-}%+Lw %-020= %l"
 #
 #
 #
