@@ -269,7 +269,8 @@ then
 	# Even better, because the above assumes shadow passwords ("x") and maybe not everyone has them:
 	# grep -e `id -un` /etc/passwd | grep `id -u`:`id -g`
 
-	# Use the above and then pull out (suing awk?) the last field of the line, which is the path to the default shell
+	# Combine the above work with something like this (select the "default shell" field of /etc/passwd):
+	# awk -F":" '{ print $7 }' /etc/passwd
 
 
 	# Here is some related input from the /etc/screenrc file:
