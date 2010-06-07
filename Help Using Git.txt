@@ -1,4 +1,4 @@
-HELP USING GIT
+﻿HELP USING GIT
 
 
 ======OTHER RESOURCES======
@@ -34,74 +34,6 @@ qgit4
 git-gui or git gui
 
 
-======YET TO ORGANIZE=======
-
-git config --global user.name "Rupert Monkey"
-git config --global user.email rupert@example.com
-
-
-
-For a list of the available tags for a given project:
-
-git tag -l
-
-
-
-git pull --rebase
-When you pull, you will notice a summary of the changes transferred (updated/new branches and tags) and a diffstat of the changes applied to your working copy. If you have local commits then the --rebase option will ensure that your local commits will first be removed temporarily, then the new changes from the remote git repository are fetched and applied, after which your local commits are reapplied on top of the new changes. If you do not use --rebase and you have local commits, your local commits will be merged with the new changes introducing a new commit which is often undesired.
-
-
-
-git push --dry-run
-git push
-
-
-If you do not pull before pushing, and changes have occurred that you never pulled, you may receive an error when you try to push. So, it is always best to pull before you push.
-
-Git, by default, pushes all the local branches which exist also in the remote repository.
-
-
-
-Committing on behalf of a contributor:  When committing code on behalf of others use the --author option, e.g.:
-	git commit -a --author "Joe Coder <joe@coder.org>"
-
-
-
-Undo Changes:
-	Undo anything you put in the index:  git reset HEAD
-	Undo anything in the workind directory:   git checkout HEAD
-
-
-
-Alias commands: You can define new git commands using the alias configuration. For example, to define "git up" do:
-	git config --global alias.up "pull --rebase"
-
-
-
-Rewriting history
-	 Say, you spend an evening implementing a feature. The session may generate 10 commits. After you are done, you see that some of the previous commits were buggy and the newer commits fix bugs introduced by them. Those commits would look better if they didn't have the bug to begin with. Or you may want to reorder commits to group them more logically by what they do. Or you may just want to improve the commit messages before making the changes public
-
-The interactive rebase command is your friend. If you want to edit / reorder / squash-into-one the last five commits, do:
-
-git rebase -i HEAD~5
-
-
-That will bring up an editor page with the last five commits listed. You can reorder the lines to reorder the commits. Or change the word at the beginning of the line to get a chance to edit the commit, or squash it (ie. merge it) into the commit before it.
-
-git format-patch
-
-
-
-If you are the one that gets sent a 'patch', then you can apply the commit in the patch with the following command:
-	git am [patch]
-
-
-
-git-clone --depth 2 [source repo] [destination directory]
-
-git-archive
-
-
 
 =====GIT CONFIGURATION======
 
@@ -127,62 +59,6 @@ Tree-ish =
 SHA-1 = 
 Commit = Revision
 	--Links to a parent commit and a tree, each of which is ID'd by its SHA-1
-
-
-
-============SORT THIS STUFF============
-
-"HEAD" always refers the current section to the current branch.
-    For example:
-    $ git checkout 0a633bf5
-    # Git returns this:
-    "HEAD is now at 0a633bf... [commit message]"
-
-
-
-the ~ suffix which refers to the parent of a commit, or if followed by a number, to the Nth parent. For example, since "HEAD" refers to the most recent commit in the current branch, "HEAD~", refers to the previous commit, and "HEAD~2" refers to two commits back in the history.
-
-
-http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
-
-
-
-
-git add --patch [file]
-
-    -- go through each difference in the file and decide whether to include that difference in this commit
-    -- good for one file contains two (or more) types of highly unrelated edits, appropriate for separating into two (or more) commits, possibly including other on-topic edited files in each of those commits.
-
-
-git add --patch is actually a shortcut to features in git add --interactive
-
-
-
-git commit --amend takes the changes staged in the index and squashes them into the previous commit. This lets you fix a problem with the last commit
-
-
-
-People seem to get a lot of utility out of git-stash(1), which lets you move changes from your working copy into a lightweight holding area to be reintroduced some time later.
-    Or, just create a new-topic branch.
-
-
-
-Let's pretend you want to rework your last 10 patches, you'll run:
-
-   $ git rebase -i HEAD~1
-
-
-Then you can rewrite "pick" into "edit" if you want to change something in a commit, or "squash" if you want to merge it with the one from the line before.
-    What the small help doesn't say is that you can actually reorder  your commits, and it will do what you expect it to do.
-    Each time one change needs you to edit anything because either you asked for it, or that one of the change you asked for generated a conflict, then as usual the rebase will stop. You will be prompted to make the change, or fix the conflict, or merge comments (in case of a squash), and when all is in order, you just need to:
-
-   $ git rebase --continue
-   
-   
-
-git export
-
-git checkout-index
 
 
 
@@ -682,4 +558,124 @@ Example steps:
   git push origin master
 
 
+
+======YET TO ORGANIZE=======
+
+git config --global user.name "Rupert Monkey"
+git config --global user.email rupert@example.com
+
+
+
+For a list of the available tags for a given project:
+
+git tag -l
+
+
+
+git pull --rebase
+When you pull, you will notice a summary of the changes transferred (updated/new branches and tags) and a diffstat of the changes applied to your working copy. If you have local commits then the --rebase option will ensure that your local commits will first be removed temporarily, then the new changes from the remote git repository are fetched and applied, after which your local commits are reapplied on top of the new changes. If you do not use --rebase and you have local commits, your local commits will be merged with the new changes introducing a new commit which is often undesired.
+
+
+
+git push --dry-run
+git push
+
+
+If you do not pull before pushing, and changes have occurred that you never pulled, you may receive an error when you try to push. So, it is always best to pull before you push.
+
+Git, by default, pushes all the local branches which exist also in the remote repository.
+
+
+
+Committing on behalf of a contributor:  When committing code on behalf of others use the --author option, e.g.:
+	git commit -a --author "Joe Coder <joe@coder.org>"
+
+
+
+Undo Changes:
+	Undo anything you put in the index:  git reset HEAD
+	Undo anything in the workind directory:   git checkout HEAD
+
+
+
+Alias commands: You can define new git commands using the alias configuration. For example, to define "git up" do:
+	git config --global alias.up "pull --rebase"
+
+
+
+Rewriting history
+	 Say, you spend an evening implementing a feature. The session may generate 10 commits. After you are done, you see that some of the previous commits were buggy and the newer commits fix bugs introduced by them. Those commits would look better if they didn't have the bug to begin with. Or you may want to reorder commits to group them more logically by what they do. Or you may just want to improve the commit messages before making the changes public
+
+The interactive rebase command is your friend. If you want to edit / reorder / squash-into-one the last five commits, do:
+
+git rebase -i HEAD~5
+
+
+That will bring up an editor page with the last five commits listed. You can reorder the lines to reorder the commits. Or change the word at the beginning of the line to get a chance to edit the commit, or squash it (ie. merge it) into the commit before it.
+
+git format-patch
+
+
+
+If you are the one that gets sent a 'patch', then you can apply the commit in the patch with the following command:
+	git am [patch]
+
+
+
+git-clone --depth 2 [source repo] [destination directory]
+
+git-archive
+
+
+"HEAD" always refers the current section to the current branch.
+    For example:
+    $ git checkout 0a633bf5
+    # Git returns this:
+    "HEAD is now at 0a633bf... [commit message]"
+
+
+
+the ~ suffix which refers to the parent of a commit, or if followed by a number, to the Nth parent. For example, since "HEAD" refers to the most recent commit in the current branch, "HEAD~", refers to the previous commit, and "HEAD~2" refers to two commits back in the history.
+
+
+http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
+
+
+
+
+git add --patch [file]
+
+    -- go through each difference in the file and decide whether to include that difference in this commit
+    -- good for one file contains two (or more) types of highly unrelated edits, appropriate for separating into two (or more) commits, possibly including other on-topic edited files in each of those commits.
+
+
+git add --patch is actually a shortcut to features in git add --interactive
+
+
+
+git commit --amend takes the changes staged in the index and squashes them into the previous commit. This lets you fix a problem with the last commit
+
+
+
+People seem to get a lot of utility out of git-stash(1), which lets you move changes from your working copy into a lightweight holding area to be reintroduced some time later.
+    Or, just create a new-topic branch.
+
+
+
+Let's pretend you want to rework your last 10 patches, you'll run:
+
+   $ git rebase -i HEAD~1
+
+
+Then you can rewrite "pick" into "edit" if you want to change something in a commit, or "squash" if you want to merge it with the one from the line before.
+    What the small help doesn't say is that you can actually reorder  your commits, and it will do what you expect it to do.
+    Each time one change needs you to edit anything because either you asked for it, or that one of the change you asked for generated a conflict, then as usual the rebase will stop. You will be prompted to make the change, or fix the conflict, or merge comments (in case of a squash), and when all is in order, you just need to:
+
+   $ git rebase --continue
+   
+   
+
+git export
+
+git checkout-index
 
