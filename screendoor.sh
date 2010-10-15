@@ -235,7 +235,7 @@ then
 		# Then after we transition the user to NewWindow (indicated by the existance of the screen.transition.ready file)
 		# we can change the title.
 	until [  -f ~/screen.transition.ready ]; do
-			echo We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user.
+			echo "We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user."
          done
    
 	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
