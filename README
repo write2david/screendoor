@@ -67,6 +67,8 @@ Screendoor requires the following:
 	sleep (standard part of GNU "coreutils" package)
 
 
+Note that Screendoor runs Screen sessions using the "multiuser" mode.  This means that if you do choose to "suid" (set user ID) /usr/bin/screen as root (usually only done to enable non-root accounts to join other multiuser screen sessions), then other users on your system will be able to connect to your Screendoor sessions.
+
 
 ==USING SCREENDOOR==
 

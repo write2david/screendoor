@@ -12,8 +12,8 @@ SCREENDOOR TODO & BUG LIST
 ***  Does screendoor work fine when using it in a non-root account?
 
 
-***  With multiuser on, can non-root accounts connect to a screendoor session owned by root?
 
+(when these are fixed, release a beta, post to Screen-Users, and also to this:  http://geekscrap.com/2010/02/using-screen-as-your-login-shell/#more-609)
 
 
 ==MINOR ISSUES (address them at some point) ==
