@@ -2,6 +2,7 @@
 # Or: wget www.tinyurl.com/get-screendoor-screenrc
 # Git: http://github.com/write2david/screendoor
 #
+defutf8 on
 #
 #
 # The following standard, common command are not changed by this .screenrc file:
