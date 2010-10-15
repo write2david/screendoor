@@ -25,14 +25,22 @@ Revision Control Systems, Distributed vs. Centralized:
 
 Quality Tutorials:
 	http://utsl.gen.nz/talks/git-svn/intro.html
+	http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
+
+Wide Variety of Documentation:
+	https://git.wiki.kernel.org/index.php/GitDocumentation
+	gitref.org
+	progit.org
 
 
 ======GUI PROGRAMS=======
-gitk
-gitk --all
+gitk or ('gitk --all')
 qgit4
-git-gui or git gui
+git-gui (or 'git gui')
+giggle
 
+Large list of GUI programs:
+https://git.wiki.kernel.org/index.php/InterfacesFrontendsAndTools#Graphical_Interfaces
 
 
 =====GIT CONFIGURATION======
@@ -679,3 +687,34 @@ git export
 
 git checkout-index
 
+http://the-gay-bar.com/2009/02/10/git-tricks-commiting-only-certain-changes-from-one-file/
+
+
+git status -s
+
+git log --oneline
+
+git log --graph
+
+git log --oneline --graph --decorate
+
+
+git describe HEAD
+
+git describe [SHA-1]
+
+git bundle
+
+git describe
+
+git branch --contains [SHA-1]  (show which branch contains that SHA-1)
+
+
+git status -sb
+
+for commenting on a commit without changing the SHA:
+    git notes edit [SHA-1]
+
+
+git config --global help.autocorrect 1
+    (suggest fixes for typo's in your git commands)
