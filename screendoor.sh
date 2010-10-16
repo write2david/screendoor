@@ -87,6 +87,7 @@ screen -wipe > /dev/null
 
 
 
+
 # FOURTH, START MAIN SCREEN SESSION, NAMED "Screendoor"  ...if not already started.
 
 if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
@@ -126,9 +127,9 @@ fi
 
 
 
-# FIFTH, SETUP AN IF/ELSE SCENARIO...
+# FIFTH, *EITHER* CREATE A NEW SCREEN WINDOW *OR* DUMP TO COMMAND LINE (because new window is already created)
 #	IF this script was called by GNU Screen, then everything is setup already. Basically just dump to a command line.
-#	ELSE this script was not called by GNU Screen, then setup a new Screen window.
+#	ELSE this script was not called by GNU Screen, then create a new Screen window.
 
 
 
@@ -155,9 +156,14 @@ fi
 
 
 
-#  This next line will check to see if parent process equals (note the colon) "SCREEN"
-#  If it does, that means that screen has called this file via the shell login files,
+#  This next line will check to see if the name of the command for the parent
+#  process equals (note the colon) "SCREEN"
+#  	If it does, that means that screen has called this file via the shell login files,
 #		or directly by screen via "Ctrl-A c"
+
+#  We add on >/dev/null to the end of the "if" line, so that output of "expr" is suppressed
+
+#  The output of "expr" is a number (the length of the match), and any number 1 and above = "true," which means we go to the "then" process. 
 
 
 
