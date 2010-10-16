@@ -262,6 +262,19 @@ git tag [title] [SHA1-1]  = create a "lightweight tag" which points to a certain
 git tag -a (or -s) -m "[msg]"  [tagname]  [SHA-1]   = create a tag object, which can be signed
 
 
+==CHECKING OUT STUFF==
+
+
+git checkout -- [name of file]   = add or replace [file] from repo into working directory
+git checkout [SHA-1]  = put this SHA-1 revision into your working directory
+git checkout [SHA-1 of a tree, commit, or tag] [name of file]  = checkout file from certain tree
+	[good to do "git log [filename]" first to find out which
+	revision/commit]
+git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
+
+
+
+
 ==BRANCHING==
 
 You should always create a branch before starting work on a feature. This way, the master will always be in a working state, and you’ll be able to work in isolation of other’s changes.
@@ -278,16 +291,6 @@ git branch -D [branch]   = delete branch, no matter whether all differences have
 After merging, if you delete the branch, it's still available in the remaining branch's history.
 
 
-==CHECKING OUT A BRANCH==
-
-
-git checkout [name-of-branch]  = checkout [name-of-branch] into working directory
-git checkout -- [name of file]   = add or replace [file] from repo into working directory
-git checkout [SHA-1]  = put this SHA-1 revision into your working directory
-git checkout [SHA-1 of a tree, commit, or tag] [name of file]  = checkout file from certain tree
-	[good to do "git log [filename]" first to find out which
-	revision/commit]
-
 
 ==MERGING BRANCHES==
 
@@ -297,7 +300,12 @@ git merge <branch> --no-commit
   merge branch <branch> into the current branch, but do not autocommit the
   result; allows you to make further tweaks
 
+git merge [branch] --no-commit --ff
+	Do not generate a *merge commit* if the merge resolved as a fast-forward, only update the branch pointer. This is the default behavior of git-merge.
+
 git merge [branch] --no-commit --no-ff
+	Generate a merge commit even if the merge resolved as a fast-forward.
+
 
 git reset --hard HEAD = Undoing a merge. If you get stuck and decide to just give up and throw the whole mess away, you can always return to the pre-merge state with
 
