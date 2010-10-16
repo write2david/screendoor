@@ -84,7 +84,7 @@ Step #1) Put a copy of the "screendoor.sh" file into your home directory.  You h
 
 	c)  [Programmer's way]   Clone, and then checkout, the Screendoor git repository from GitHub.
 		See the website listed at the top of this document for the git URL.
-		Tip:  Clone the git repo to a new local directory, then softlink screendoor.sh (and any dot-files you want) to your home directory, and then clone/pull the repository as often as desired.
+		Tip:  Clone the git repo to a new directory, then softlink screendoor.sh (and any dot-files you want) to your home directory, and then clone/pull the repository as often as desired.
 
 
 
