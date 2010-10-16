@@ -264,12 +264,13 @@ git tag -a (or -s) -m "[msg]"  [tagname]  [SHA-1]   = create a tag object, which
 
 ==BRANCHING==
 
-
-Branching: You should always create a branch before starting work on a feature. This way, the master will always be in a working state, and you’ll be able to work in isolation of other’s changes.
+You should always create a branch before starting work on a feature. This way, the master will always be in a working state, and you’ll be able to work in isolation of other’s changes.
 
 git branch [new-branch-name]   =  create new branch from master branch
 
-git branch = list branches
+git branch = list branches, including which is the current one
+
+git checkout [branch name] = switch to that branch
 
 git branch -d [branch]   = delete branch, ensuring all differences have been merged
 git branch -D [branch]   = delete branch, no matter whether all differences have been merged
