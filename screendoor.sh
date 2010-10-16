@@ -13,8 +13,10 @@
 
 
 
-# Great Bash help / howto page:
-# http://www.panix.com/~elflord/unix/bash-tute.html
+	# Note to self:
+	# Great Bash help / howto page:
+	# http://www.panix.com/~elflord/unix/bash-tute.html
+
 
 
 
@@ -33,9 +35,10 @@
 #             Screendoor connects to new window.
 #
 #
-# NOTES
+# OTHER NOTES
 #
 # Often, sleep commands (to delay 1/5 of a second) are inserted because the screen commands often "return" *immediately* AND there is another screen command immediately following which depends on the the first sleep command *completing*.  So, we want to make sure it completes (even a screen command as simple as setting a title can return immediately, and if the next command references a window with that title, that next command may not work because the "set title" command returned immediately without having yet set the title).
+
 
 
 
@@ -52,12 +55,14 @@
 # NOTE: When running screendoor.sh directly from the command line, the test for interactive shell and for the $SHELL variable always test "non-interactive" and ______   because it is being run as a script.  When screendoor.sh is run as being sourced from .bash_login (for example) then the interactive shell tests positive.
 
 
-         if [[ $- != *i* ]] ; then
+  if [[ $- != *i* ]] ; then
          # Shell is non-interactive.  Be done now!
          return
          # use 'return', not 'exit', since we just want to prevent execution of further code in this script, not exit the non-interactive shell and thus mess up the program that needed it / spawned it   (like scp or WinSCP). 
          fi
+
          # So now continue if the shell is interactive... 
+
 
 
 
@@ -82,10 +87,9 @@ screen -wipe > /dev/null
 
 
 
-# FOURTH, START MAIN SCREEN SESSION, NAMED "Screendoor"
-#        ...if not already started.
-#
-	if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
+# FOURTH, START MAIN SCREEN SESSION, NAMED "Screendoor"  ...if not already started.
+
+if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
    # That is, if there is no screen session named "Screendoor", then...
 	# we will setup our main screen session (named "Screendoor") with "Cornerstone" window
 	#
@@ -96,26 +100,27 @@ screen -wipe > /dev/null
 	# First, start session "Screendoor."
 	# From the GNU Screen manpage: "-d -m" means "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."
 	
-echo 'Starting GNU Screen session named "Screendoor"...'
-# Create new session named "Screendoor" with the first window titled "NewWindow"
-	# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediately name it that way
+	echo 'Starting GNU Screen session named "Screendoor"...'
+
+		# Create new session named "Screendoor" with the first window titled "NewWindow"
+		# It will be renamed to "Cornerstone" in the line afterward, but we don't want to immediately name it that way
 		# because then it will be the default name for new windows, so that if we later do "Ctrl-A c" to create a new window, it will create it named "Cornerstone".  We don't want all new windows to be named "Cornerstone," only just this fist one.
 	screen -S Screendoor -d -m -t NewWindow sleep 99999999999d
 	
-# Rename the window title...	
-	sleep 0.2 && screen -S Screendoor -p0 -X title Cornerstone
+	# Rename the window title...	
+		sleep 0.2 && screen -S Screendoor -p0 -X title Cornerstone
 	
-# Write a message on the Cornerstone window using the "stuff" screen command
-# \015 is octal ASCII code for carriage return.
+	# Write a message on the Cornerstone window using the "stuff" screen command
+	# \015 is octal ASCII code for carriage return.
 	# Need to use 'eval' so that the text \015 isn't printed literally
 	# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
-	sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "   [ This window holds open the central Screendoor session. ] \015"'
+		sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "   [ This window holds open the central Screendoor session. ] \015"'
 	
-# Set the session as "multiuser"
-	sleep 0.2 && screen -S Screendoor -X multiuser on
+	# Set the session as "multiuser"
+		sleep 0.2 && screen -S Screendoor -X multiuser on
 	
-# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
-	sleep 0.2 && screen -S Screendoor -X aclchg \* -w 0
+	# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
+		sleep 0.2 && screen -S Screendoor -X aclchg \* -w 0
 
 fi
 
@@ -251,7 +256,7 @@ then
 
 	exec zsh
 	# if we are going to call zsh directly then we lose the environment variables (like $DISPLAY, which was set above, which is needed for proper X-forwarding, like with xming)
-	# So, until we get a better solution, we are adding in the above "export DISPLAY..." line to .zshrc  (about line 72)
+	# So, until we get a better solution, we are adding in the above "export DISPLAY..." line to .zshrc  (about line 86)
 	
 
 
