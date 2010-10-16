@@ -301,6 +301,7 @@ git merge <branch> --no-commit
 
 git merge [branch] --ff
 	Do not generate a *merge commit* if the merge resolved as a fast-forward, only update the branch pointer. This is the default behavior of git-merge.
+	A merge that is a "fast-forward" merge will not show a merge in the history (there will be no 2-parent commit).  It will just appear that all work was done on the destination branch. 
 
 git merge [branch] --no-ff
 	Generate a merge commit even if the merge resolved as a fast-forward.
@@ -311,8 +312,6 @@ git reset --hard HEAD = Undoing a merge. If you get stuck and decide to just giv
 $ git reset --hard ORIG_HEAD = Or, if you've already committed the merge that you want to throw away.
 
 git cherry-pick rev = Aside from merging, sometimes you want to just pick one commit from a different branch. To apply the changes in revision rev and commit them to the current branch use cherry-pick.
-
-A merge that is a "fast-forward" merge will not show a merge in the history (there will be no 2-parent commit).  It will just appear that all work was done on the destination branch. 
 
 
 
@@ -367,7 +366,6 @@ git blame <file>  --  to see who changed a file last, and when
 git pull = does both "fetch" and "merge"
 
 
-
 git repo is technically both the working dir and the .git dir, though often the repo's are distributed w/a blank working dir, a blank index, and just the .git directory
 
 
@@ -408,7 +406,6 @@ git count-objects
 git ls-files --deleted
 git ls-files -d
     only shows files that are in STAGING but deleted from WORKING
-
 
 
 

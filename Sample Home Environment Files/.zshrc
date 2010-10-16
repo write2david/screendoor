@@ -44,7 +44,12 @@ preexec () {
 
 # Next line changes GNU Screen "window title" to match the currently-running, or last-run, program.  See http://aperiodic.net/screen/title_examples  .  My ScreenDoor script sets the initial title (after default is automatically changed) to be the date and time -- not very useful, so the next line changes it to [name-of-program].
  
+# The next command mis-fires if zsh is not running within screen
+# It creates a line before each command, a line which starts with a gibberish character and then gives the command name.
+
+if [[ $TERM == screen ]]; then
   echo -ne "\ek${1%% *}\e\\"
+fi
 
 
 # Next line changes the title of xterm window to be the title of the running program within xterm
