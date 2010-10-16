@@ -178,6 +178,19 @@ fi
 
 
 
+
+
+        # Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
+        # the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
+        # bash shell, but when that bash shell creates/connects to a new screen window,
+        # the shell in that new screen window doesn't have the $DISPLAY variable set).
+        # So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
+                 # then read it from within the new window's shell.
+        # Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
+        #echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
+
+
+
 if ! expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 
 
@@ -187,20 +200,11 @@ then
 
 	# NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
 
-	# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
-	# the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
-	# bash shell, but when that bash shell creates/connects to a new screen window,
-	# the shell in that new screen window doesn't have the $DISPLAY variable set).
-	# So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
-		# then read it from within the new window's shell.
-	# Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
-
-	echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 	#echo "creating a new window in the session"
 
 	# remove a file that may exist, so that it's existence can be used later
-	rm -f ~/screen.transition.ready
+	#rm -f ~/screen.transition.ready
 
 	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window...
 	screen -S Screendoor -X screen
@@ -230,10 +234,13 @@ then
 	# Now we actually connect to the new window.
 		# We can add "exec" so that this bash script dies and we are just left with the new window.
 		# Otherwise we have end up with bash processes living in the background.
+		
 		#echo "exec'ing a connection to the session"
 		#sleep 4
-		touch ~/screen.transition.ready
-		exec screen -S Screendoor -x -p NewWindow
+
+		#touch ~/screen.transition.ready
+		#sleep 5
+		#exec screen -S Screendoor -x -p NewWindow
 
 
 
@@ -301,8 +308,8 @@ else
 	
 	# Display mail headers
 	echo "Your current mail..."  &&  mail -H  &&  echo
-
-
+	
+	
 
 	# If the new screen window was created with a new SSH/login screen or new xterm tab,
 		# then it will have created a window that is already named.
@@ -312,13 +319,17 @@ else
 		# since we don't need an absolutely unique window name.
 
 
-	# Use a loop to delay the next part (of setting Screen window title) so that it will still be "NewWindow."
-		# Then after we transition the user to NewWindow (indicated by the existance of the screen.transition.ready file)
+	# Use a loop to delay the next part (of setting Screen window title) so that we can still refer to it as "NewWindow."
+		# Why do we need to have it titled "NewWindow?"  -- because the "exec screen -S Screendoor -x -p NewWindow" line above depends on it.
+		# Must wait until that line is executed BEFORE we change the title (below).
+		# Then after we move the user into NewWindow (indicated by the existence of the screen.transition.ready file)
 		# we can change the title.
-	until [  -f ~/screen.transition.ready ]; do
-			echo "We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user."
-         done
+	#until [ -f ~/screen.transition.ready ]; do
+	#		echo "We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user."
+   #      done
    
+	# Done with screen.transition.ready, so now we can delete it.   
+   #rm -f ~/screen.transition.ready
 	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
 
 	# Don't need this file anymore:
