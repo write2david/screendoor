@@ -83,7 +83,10 @@ MAILCHECK=60
 SHELL=/bin/zsh
 
 # The next line is temporary, see note on about line 231 of screendoor.sh
-export DISPLAY=`cat ~/screen.xDISPLAY.txt`
+#export DISPLAY=`cat ~/screen.xDISPLAY.txt`
+	# Alternative:  next line means "DISPLAY=DISPLAY unless (:) DISPLAY is not set, in which case we read it from the file)
+	DISPLAY=${DISLAY:=`cat ~/screen.xDISPLAY.txt`}
+
 
 # colored filename/directory completion
 # Attribute codes:
@@ -266,3 +269,4 @@ alias -g S='|sort'
 # directory aliases
 # use like: ls ~src OR ~src OR du -h ~src
 src=~/src
+
