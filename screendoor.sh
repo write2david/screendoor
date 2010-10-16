@@ -329,7 +329,7 @@ else
          done
    
 	# Done with screen.transition.ready, so now we can delete it.   
-   #rm -f ~/screen.transition.ready
+	rm -f ~/screen.transition.ready
 	screen -X title "`date +%m/%d\ @\ %I:%M%p`"
 
 	# Don't need this file anymore:
