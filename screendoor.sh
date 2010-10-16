@@ -99,7 +99,7 @@ if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
 	# 
 	#
 	# First, start session "Screendoor."
-	# From the GNU Screen manpage: "-d -m" means "Start screen in 'detached' mode. This creates a new session but doesn't attach to  it.  This  is  useful for  system startup scripts."
+	# From the GNU Screen manpage: "-d -m" means "Start screen in 'detached' mode. This creates a new session but doesn't attach to it.  This is useful for system startup scripts."
 	
 	echo 'Starting GNU Screen session named "Screendoor"...'
 
@@ -158,20 +158,84 @@ fi
 
 #  This next line will check to see if the name of the command for the parent
 #  process equals (note the colon) "SCREEN"
-#  	If it does, that means that screen has called this file via the shell login files,
+
+#  Actually, we are checking that it does NOT equal "SCREEN" (not the !, which reverses the IF).
+
+#  	If it does match, that means that *Screen* has called this file via the shell login files,
 #		or directly by screen via "Ctrl-A c"
+
+#		If it does NOT match, that means that Screen has not called this file, and so we still need to setup a new Screen window
+#			which itself will then re-call this file, and then there WILL be a match.
+ 
 
 #  We add on >/dev/null to the end of the "if" line, so that output of "expr" is suppressed
 
-#  The output of "expr" is a number (the length of the match), and any number 1 and above = "true," which means we go to the "then" process. 
+#  The output of "expr" is a number (the length of the match), and any number 1 and above = "true." 
 
 
 
-if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
-
+if ! expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 
 
 then
+
+# Above evaluation line is "false" and so "Screen" is not the parent process, so we need to create a new Screen window.
+
+# NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
+
+# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
+# the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
+# bash shell, but when that bash shell creates/connects to a new screen window,
+# the shell in that new screen window doesn't have the $DISPLAY variable set).
+# So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
+# then read it from within the new window's shell.
+# Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
+
+	echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
+
+	#echo "creating a new window in the session"
+
+	# remove a file that may exist, so that it's existence can be used later
+	rm -f ~/screen.transition.ready
+
+	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window...
+	screen -S Screendoor -X screen
+	
+	# Sleep to make sure everything catches up:
+	#sleep 0.2
+	#sleep 4
+
+	# Creating the new window ONE of other Screen instances to move ahead to the next window, so move it back:
+		# We can choose between the "other" command and the "prev" command.
+		# If we go with "prev" and comment-out the later line containing "-x -p" (meaning switch to the new window)...
+			# so that we see the effect of the next line but without switching to the new window
+			# then we see the difference b/t "other" and "prev"
+	#echo "moving all windows back to OTHER"
+	screen -S Screendoor -X other
+
+	#screen -S Screendoor -X select NewWindow
+
+
+	# Sleep to make sure everything catches up:
+	#sleep 0.2
+	#sleep 4
+
+
+	# Use "-x" to attached to the last-created window:
+	# Remember that we are now *attaching* to the new window; we have already *created* the new window (about 4 commands up from this line), which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
+	# Now we actually connect to the new window.
+		# We can add "exec" so that this bash script dies and we are just left with the new window.
+		# Otherwise we have end up with bash processes living in the background.
+		#echo "exec'ing a connection to the session"
+		#sleep 4
+		touch ~/screen.transition.ready
+		exec screen -S Screendoor -x -p NewWindow
+
+
+
+else
+
+# Above evaluation line is "true" and so "Screen" is the parent process, so we need to drop to command line.
 
 	# We are in the new screen window, now preparing to drop the user to the command line
 
@@ -297,72 +361,4 @@ then
 		#        shell -$SHELL
 
 
-
-else
-
-
-# NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
-
-# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
-# the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
-# bash shell, but when that bash shell creates/connects to a new screen window,
-# the shell in that new screen window doesn't have the $DISPLAY variable set).
-# So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
-# then read it from within the new window's shell.
-# Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
-
-	echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
-
-	#echo "creating a new window in the session"
-
-	# remove a file that may exist, so that it's existence can be used later
-	rm -f ~/screen.transition.ready
-
-	# Use "-X" to send a command which then immediately returns.  The command is: on the central "Screendoor" session, create a new window...
-	screen -S Screendoor -X screen
-	
-	# Sleep to make sure everything catches up:
-	#sleep 0.2
-	#sleep 4
-
-	# Creating the new window ONE of other Screen instances to move ahead to the next window, so move it back:
-		# We can choose between the "other" command and the "prev" command.
-		# If we go with "prev" and comment-out the later line containing "-x -p" (meaning switch to the new window)...
-			# so that we see the effect of the next line but without switching to the new window
-			# then we see the difference b/t "other" and "prev"
-	#echo "moving all windows back to OTHER"
-	screen -S Screendoor -X other
-
-	#screen -S Screendoor -X select NewWindow
-
-
-	# Sleep to make sure everything catches up:
-	#sleep 0.2
-	#sleep 4
-
-
-	# Use "-x" to attached to the last-created window:
-	# Remember that we are now *attaching* to the new window; we have already *created* the new window (about 4 commands up from this line), which itself has already called this script and goes through the "Creating new GNU Screen window" section near the top.
-	# Now we actually connect to the new window.
-		# We can add "exec" so that this bash script dies and we are just left with the new window.
-		# Otherwise we have end up with bash processes living in the background.
-		#echo "exec'ing a connection to the session"
-		#sleep 4
-		touch ~/screen.transition.ready
-		exec screen -S Screendoor -x -p NewWindow
-
 fi
-
-
-
-
-
-# PROBLEM/WORKAROUND: the problem with running screen plainly that
-# 	when you then run "startx"  you are
-# running it w/in screen, and so then when you run "xterm" in X-windows it
-# won't be
-# able to produce new screen sessions (it returns immediately for some reason).
-# Since it's running from w/in screen, then the "screen" command doesn't create
-# a new session, it just creates a new window); all you can do is
-# specify a screen session to connect to. To get around this, specify that the
-# "screen" command MUST create a new session (using  "-m"), even if running w/in# a screen session.
