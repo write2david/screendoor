@@ -115,12 +115,14 @@ if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
 	# \015 is octal ASCII code for carriage return.
 	# Need to use 'eval' so that the text \015 isn't printed literally
 	# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
-		sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "   [ This window holds open the central Screendoor session. ] \015"'
+	# We are using lots of carriage returns in order to get the cursor down the page, because if it's not down the page, it may print the message too high up, and you actually have to scroll up (Ctrl-A, Esc) to see it
+		sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "\015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015   [ This window holds open the central Screendoor session. ] \015"'
 	
 	# Set the session as "multiuser"
 		sleep 0.2 && screen -S Screendoor -X multiuser on
 	
 	# Make this first window as "read-only" (requires the "multiuser" setting of the previous line)
+		# For the aclchg command, the \* means "all users"  (only one at this point), "-w" means "remove write-ability," and "0" is the Window number
 		sleep 0.2 && screen -S Screendoor -X aclchg \* -w 0
 
 fi
@@ -128,49 +130,51 @@ fi
 
 
 # FIFTH, *EITHER* CREATE A NEW SCREEN WINDOW *OR* DUMP TO COMMAND LINE (because new window is already created)
-#	IF this script was called by GNU Screen, then everything is setup already. Basically just dump to a command line.
-#	ELSE this script was not called by GNU Screen, then create a new Screen window.
+#	IF this script was not called by GNU Screen, then create a new Screen window.
+#	ELSE this script was called by GNU Screen, then everything is setup already. Basically just dump to a command line.
 
 
 
-# We want to start screen on all shell prompts, not just all logins.
-# This way we can connect to even xterm tabs in XFCE.
-# But if we start screen on all  prompts, then we'll run into this problem:
-#     ...when screen starts, it auto-starts a prompt (of course) and so
-#     this prompt will then auto-start screen according to this script.
-# So, we want to prevent screen from starting if the prompt
-#       was itself started by screen.
-# And then, after screen is closed, there's auto-logout from the prompt,
-#       so that you don't have to type "exit" again.
-# 
-# This next line finds out if the command (-o command) that initiated
-#       the current bash session (-p $PPID) was "screen."   If it IS screen,
-#       then name the window and dump to a prompt.  If it's not, then start
-#       screen; screen will then spawn a shell which will call this file again, which will determine that
-#       screen IS now the command that started bash, and so it won't load
-#       Screen again.
-# Inspired by:
-#       http://forums.whirlpool.net.au/forum-replies-archive.cfm/324661.html
+# Why detect whether screen is the parent to screendoor?  Because of the loop caused by screendoor running screen, which runs screendoor, which runs screen, etc...
+
+	# We want to start screen on all shell prompts, not just all logins.
+	# This way we can connect to even xterm tabs in XFCE.
+	# But if we start screen on all  prompts, then we'll run into this problem:
+	#     ...when screen starts, it auto-starts a prompt (of course) and so
+	#     this prompt will then auto-start screen according to this script.
+	# So, we want to prevent screen from starting if the prompt
+	#       was itself started by screen.
+	# And then, after screen is closed, there's auto-logout from the prompt,
+	#       so that you don't have to type "exit" again.
+ 
+	# This next line finds out if the command (-o command) that initiated
+	#       the current bash session (-p $PPID) was "screen."   If it IS screen,
+	#       then name the window and dump to a prompt.  If it's not, then start
+	#       screen; screen will then spawn a shell which will call this file again, which will determine that
+	#       screen IS now the command that started bash, and so it won't load
+	#       Screen again.
+	# Inspired by:
+	#       http://forums.whirlpool.net.au/forum-replies-archive.cfm/324661.html
 
 
 
 
 
-#  This next line will check to see if the name of the command for the parent
-#  process equals (note the colon) "SCREEN"
+	#  This next line will check to see if the name of the command for the parent
+	#  process equals (note the colon) "SCREEN"
 
-#  Actually, we are checking that it does NOT equal "SCREEN" (not the !, which reverses the IF).
+		#  Actually, we are checking that it does NOT equal "SCREEN" (not the !, which reverses the IF).
 
-#  	If it does match, that means that *Screen* has called this file via the shell login files,
-#		or directly by screen via "Ctrl-A c"
+	#  	If it does match, that means that *Screen* has called this file via the shell login files,
+	#		or directly by screen via "Ctrl-A c"
 
-#		If it does NOT match, that means that Screen has not called this file, and so we still need to setup a new Screen window
-#			which itself will then re-call this file, and then there WILL be a match.
+	#		If it does NOT match, that means that Screen has not called this file, and so we still need to setup a new Screen window
+	#			which itself will then re-call this file, and then there WILL be a match.
  
 
-#  We add on >/dev/null to the end of the "if" line, so that output of "expr" is suppressed
+	#		  We add on >/dev/null to the end of the "if" line, so that output of "expr" is suppressed
 
-#  The output of "expr" is a number (the length of the match), and any number 1 and above = "true." 
+	#  The output of "expr" is a number (the length of the match), and any number 1 and above = "true." 
 
 
 
@@ -179,17 +183,17 @@ if ! expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 
 then
 
-# Above evaluation line is "false" and so "Screen" is not the parent process, so we need to create a new Screen window.
+	# Above evaluation line is "false" and so "Screen" is not the parent process, so we need to create a new Screen window.
 
-# NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
+	# NOW CREATE NEW SCREEN WINDOW IF THIS SCRIPT IS CALLED BY ANYTHING OTHER THAN "Ctrl-A c"
 
-# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
-# the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
-# bash shell, but when that bash shell creates/connects to a new screen window,
-# the shell in that new screen window doesn't have the $DISPLAY variable set).
-# So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
-# then read it from within the new window's shell.
-# Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
+	# Got a problem where doing X-forwarding (like X-ming or over SSH) doesn't result in the new screen window having
+	# the $DISPLAY property set (when "X-forwarding" is enabled in a SSH connection, SSH itself sets $DISPLAY in the initial
+	# bash shell, but when that bash shell creates/connects to a new screen window,
+	# the shell in that new screen window doesn't have the $DISPLAY variable set).
+	# So, while we are still in the initial shell, we will write the $DISPLAY variable to a file, and
+		# then read it from within the new window's shell.
+	# Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
 
 	echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
