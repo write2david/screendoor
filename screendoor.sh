@@ -116,7 +116,7 @@ if [[ "`screen -ls | grep Screendoor`" != *Screendoor* ]]; then
 	# Need to use 'eval' so that the text \015 isn't printed literally
 	# \015 is also referenced in the INPUT TRANSLATION section of the screen man page
 	# We are using lots of carriage returns in order to get the cursor down the page, because if it's not down the page, it may print the message too high up, and you actually have to scroll up (Ctrl-A, Esc) to see it
-		sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "\015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015   [ This window holds open the central Screendoor session. ] \015"'
+		sleep 0.2 && screen -S Screendoor -p Cornerstone -X eval 'stuff "\015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015 \015   [ This window holds open the central Screendoor session. ] \015 \015 \015"'
 	
 	# Set the session as "multiuser"
 		sleep 0.2 && screen -S Screendoor -X multiuser on
@@ -238,9 +238,9 @@ then
 		#echo "exec'ing a connection to the session"
 		#sleep 4
 
-		#touch ~/screen.transition.ready
+		touch ~/screen.transition.ready
 		#sleep 5
-		#exec screen -S Screendoor -x -p NewWindow
+		exec screen -S Screendoor -x -p NewWindow
 
 
 
@@ -324,9 +324,9 @@ else
 		# Must wait until that line is executed BEFORE we change the title (below).
 		# Then after we move the user into NewWindow (indicated by the existence of the screen.transition.ready file)
 		# we can change the title.
-	#until [ -f ~/screen.transition.ready ]; do
-	#		echo "We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user."
-   #      done
+	until [ -f ~/screen.transition.ready ]; do
+			echo "We are looping, waiting for the user to connect to this window.  BTW, this line of text will never be seen by the user."
+         done
    
 	# Done with screen.transition.ready, so now we can delete it.   
    #rm -f ~/screen.transition.ready
