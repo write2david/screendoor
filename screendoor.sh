@@ -173,8 +173,10 @@ if expr "$(ps --no-headers -o command -p $PPID)" : SCREEN >/dev/null
 
 then
 
+	# We are in the new screen window, now preparing to drop the user to the command line
+
 	# You may choose to comment out the following line
-	echo 'Starting a new window in GNU Screen...'
+	echo 'Welcome to a new GNU Screen window...'
 	echo
 
 
@@ -309,7 +311,7 @@ else
 # then read it from within the new window's shell.
 # Use "-n" (makes echo remove the linefeed/newline/carriage-return) on the "echo" because you will be reading this file later in order to name a screen window, and you don't want to try to name a window based on two lines instead of one.
 
-echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
+	echo -n "`echo $DISPLAY`" > ~/screen.xDISPLAY.txt
 
 	#echo "creating a new window in the session"
 
