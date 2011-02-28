@@ -1,12 +1,14 @@
 SCREENDOOR TODO & BUG LIST
 
 
-==MAJOR ISSUES (fix before next release) ==
+==MAJOR ISSUES (fix before first release) ==
 
 
 ***  Honor whatever default shell (BASH, ZSH, etc) the user has.
-	Not only is this a good idea, but right now screendoor isn't fit for most people
-	since it calls "zsh" whenever it is run. 
+	Not only is this a good idea, but right now screendoor isn't fit for most people since it calls "zsh" whenever it is run. 
+	Two issues with this:
+		a) I don't know how to call screendoor when the user's default shell is ZSH.  That is, I can't successfully call it from .zshrc
+		b) When ZSH is used to run Xwindows, then GUI xterms/Terminals start ZSH as the shell, which doesn't call screendoor.
 
 
 ***  Does screendoor work fine when using it in a non-root account?

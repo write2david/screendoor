@@ -6,7 +6,7 @@
 Git Community Book:
 	http://book.git-scm.com/
 
-Git User Manual:
+Official Git User Manual:
 	http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
 
 Git Cheat Sheets:
@@ -14,23 +14,21 @@ Git Cheat Sheets:
 	http://ktown.kde.org/~zrusin/git/git-cheat-sheet.svg
 	www-cs-students.stanford.edu/~blynn/gitmagic/book.pdf
 
-Man Pages:
-	gittutorial
-	gittutorial-2
+The Manly Man Pages:
+	'man gittutorial'
+	'man gittutorial-2'
 
-Revision Control Systems, Distributed vs. Centralized:
+Intro to Revision Control Systems, Distributed vs. Centralized:
 	http://en.wikipedia.org/wiki/Distributed_revision_control
 	http://git.wiki.kernel.org/index.php/GitSvnComparison
 	http://hginit.com/00.html
 
-Quality Tutorials:
+Quality Tutorials & Documentation:
 	http://utsl.gen.nz/talks/git-svn/intro.html
 	http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
-
-Wide Variety of Documentation:
 	https://git.wiki.kernel.org/index.php/GitDocumentation
-	gitref.org
-	progit.org
+	www.GitRef.org
+	www.ProGit.org
 
 
 ======GUI PROGRAMS=======
@@ -576,6 +574,16 @@ Example steps:
 
 git config --global user.name "Rupert Monkey"
 git config --global user.email rupert@example.com
+
+
+The contents of...
+
+http://www.turnkeylinux.org/blog/git-fix-commits
+
+
+and the very bottom section of:
+
+http://jonas.nitro.dk/git/quick-reference.html
 
 
 
